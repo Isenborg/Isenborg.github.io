@@ -16,15 +16,18 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     height: 100vh;
-    color: white;
-    text-align: center;
-    font-family: Arial, sans-serif;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .name {
-    font-size: 40px;
+    background-color: rgba(10, 162, 208, 0.5);
+    border-radius:50px;
+    padding: 15px;
+    font-size: 50px;
+    font-family: Helvetica;
+    margin-top: 350px;
     margin-bottom: 20px;
 }
 
