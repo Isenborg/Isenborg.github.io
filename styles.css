@@ -1,7 +1,101 @@
+
+@font-face {
+    font-family: 'oswald';
+    src: url(fonts/oswald-demibold-webfont.woff2) format('truetype');
+}
+
 body {
     margin: 0;
     padding: 0;
+    font-family: 'oswald';
 }
+
+
+.about-me {
+    opacity: 0.7;
+    font-family: 'oswald';
+    position: absolute;
+    margin: 20px;
+    background-color: brown;
+    border-radius: 25px;
+    border: 5px solid black;
+    display: inline-block;
+    height: 150px;
+    transition: display 0.5s ease, transform 0.5s ease, height 0.5s, opacity 0.5s ease-in-out;
+}
+
+
+.about-me .name {
+    font-size: 75px;
+    font-family: 'oswald', sans-serif;
+    padding: 25px;
+    color: white;
+}
+
+.about-me .details {
+    font-style: oblique;
+    font-size: 30px;
+    margin: 20px;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+
+.about-me:not(:hover) {
+    transform: scale(0.8);
+}
+
+.about-me:hover .details{
+    opacity: 1;
+}
+
+.about-me:hover {
+    height: 350px;
+    opacity: 1;
+}
+
+.my-projects {
+    opacity: 0.7;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    background-color: brown;
+    border-radius: 25px;
+    border: 5px solid black;
+    display: flex;
+    align-items: flex-start;
+    margin: 20px;
+    transition: transform 0.5s ease, opacity 0.5s;
+
+}
+
+.my-projects .title {
+    flex-grow: 1;
+    font-size: 75px;
+    font-family: 'oswald', sans-serif;
+    padding: 25px;
+    color: white;
+}
+
+.my-projects:not(:hover) {
+    transform: scale(0.8);
+}
+
+.my-projects img {
+    width: 100px;
+    margin: 25px;
+    opacity: 0.7;
+}
+
+.my-projects img:hover {
+    opacity: 1;
+}
+
+.my-projects:hover {
+    opacity: 1;
+}
+
+
 
 .cover-image {
     position: absolute;
@@ -10,24 +104,5 @@ body {
     width: 100%;
     height: 100%;
     z-index: -1;
-}
-
-.content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-    color: black;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.name {
-    background-color: rgba(10, 162, 208, 0.5);
-    border-radius:50px;
-    padding: 15px;
-    font-size: 50px;
-    font-family: Helvetica;
-    margin-top: 350px;
-    margin-bottom: 20px;
 }
 
