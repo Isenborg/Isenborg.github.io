@@ -1,0 +1,50 @@
+
+
+body {
+    background-color: black;
+    padding-left: 15%;
+    padding-right: 15%;
+    z-index: 0;
+}
+
+.background-text {
+    color: gray;
+    position: absolute;
+    display: contents;
+    background-color: white;
+}
+
+.header {
+    text-align: center;
+    font-family:'Courier New', Courier, monospace;
+    background-color: gray;
+
+}
+
+.header h1{
+    margin-top: 20%;
+    margin-bottom: 50%;
+    color: white;
+}
+
+.button-container {
+    display: flex;
+    position: relative;
+    justify-content:space-between;
+    width: 100%;
+}
+
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px; /* this gives the button rounded edges */
+    background-color: #008CBA; /* change as needed */
+    color: white; /* change as needed */
+    cursor: pointer;
+    text-decoration: none;
+}
+
+button:hover {
+    background-color: #007B9A; /* slightly darker shade for hover effect, change as needed */
+}
