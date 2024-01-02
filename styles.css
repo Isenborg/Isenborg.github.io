@@ -1,50 +1,71 @@
-
-
 body {
     background-color: black;
-    padding-left: 15%;
-    padding-right: 15%;
-    z-index: 0;
-}
 
-.background-text {
-    color: gray;
-    position: absolute;
-    display: contents;
-    background-color: white;
+
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
 }
 
 .header {
-    text-align: center;
-    font-family:'Courier New', Courier, monospace;
-    background-color: gray;
+    position: absolute;
+    top: 10vh;
+    left: 50%;
+    background-image: url("images/black_background.gif");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto;
 
+    transform: translateX(-50%);
+    border-radius: 10px;
+
+    width: 95%;
+    height: 60vh;
+
+
+    display: flex;
+    justify-content: center;
+    text-align: center;
+
+    position: relative;
 }
+
 
 .header h1{
-    margin-top: 20%;
-    margin-bottom: 50%;
+    font-size: 60px;
+    font-weight: 100;
+    position: absolute;
     color: white;
+
+
 }
+
+
+
+
 
 .button-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 100px;
+
     display: flex;
-    position: relative;
-    justify-content:space-between;
-    width: 100%;
+    justify-content: space-between;
 }
-
-
 button {
+    font-size: 30px;
     padding: 10px 20px;
+    border-radius: 5px;
     border: none;
-    border-radius: 50px; /* this gives the button rounded edges */
-    background-color: #008CBA; /* change as needed */
-    color: white; /* change as needed */
+    background-color: black;
+    color: white;
+
     cursor: pointer;
-    text-decoration: none;
+    transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #007B9A; /* slightly darker shade for hover effect, change as needed */
+button:hover{
+    background-color: gray;
+
 }
