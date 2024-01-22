@@ -1,6 +1,6 @@
 var correct = ['M','A','R','C','U','S','I','S','E','N','B','O','R','G']
 var correctTitle = "MARCUS ISENBORG"
-var ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+var ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ//%$&|||\\\\--"
 var isHovering = false
 var intervalID
 
@@ -38,7 +38,6 @@ function correctString(){
             new_string += titleString[index]
         } 
     }
-    console.log(new_string)
     titleString = new_string
     if(titleString == correctTitle){
         clearInterval(intervalID)
@@ -66,7 +65,6 @@ function correctTheTitle(){
             new_string += titleString[index]
         }
     }
-    console.log(new_string)
     titleElement.textContent = new_string
     if(new_string == correctTitle){
         clearInterval(intervalID)

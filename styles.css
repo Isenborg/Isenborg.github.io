@@ -13,13 +13,13 @@ body {
     background-image: url("images/black_background.gif");
     background-repeat: no-repeat;
     background-position: center;
-    background-size: auto;
+    background-size:contain;
 
     transform: translateX(-50%);
     border-radius: 10px;
 
     width: 95%;
-    height: 60vh;
+    height: 80vh;
 
 
     display: flex;
