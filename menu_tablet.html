@@ -7,7 +7,30 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Menu" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#000000" />
   <title>Restaurangmeny – Tablet</title>
+  <script>
+    // Register service worker for PWA installability/fullscreen when added to home screen
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(console.error);
+      });
+    }
+    // Optional: request fullscreen on first user interaction when running in browser
+    document.addEventListener('DOMContentLoaded', () => {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+      if (!isStandalone) {
+        const requestFullscreen = () => {
+          const el = document.documentElement;
+          const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+          if (req) req.call(el);
+        };
+        window.addEventListener('click', requestFullscreen, { once: true });
+        window.addEventListener('touchend', requestFullscreen, { once: true });
+      }
+    });
+  </script>
   <style>
     :root {
       --bg: #ffffff;
