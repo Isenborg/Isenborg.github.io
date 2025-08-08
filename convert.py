@@ -16,7 +16,7 @@ for img_path in folder.iterdir():
             "ffmpeg",
             "-y",  # overwrite if exists
             "-i", str(img_path),
-            "-vf", "scale=1920:-1",  # resize width to 1920px, keep aspect
+            "-vf", "scale=1080:-1",  # resize width to 1920px, keep aspect
             "-q:v", "80",            # quality for WebP (0-100)
             str(webp_path)
         ]
