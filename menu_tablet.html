@@ -29,6 +29,39 @@
         window.addEventListener('click', requestFullscreen, { once: true });
         window.addEventListener('touchend', requestFullscreen, { once: true });
       }
+
+      // JS lightbox that preserves scroll position
+      let lastScrollY = 0;
+      const openLightbox = (id) => {
+        const box = document.querySelector(id);
+        if (!box) return;
+        lastScrollY = window.scrollY;
+        box.classList.add('open');
+      };
+      const closeLightbox = () => {
+        document.querySelectorAll('.lightbox.open').forEach((box) => box.classList.remove('open'));
+        window.scrollTo(0, lastScrollY);
+      };
+
+      // Bind full-click and thumb to JS lightbox
+      document.querySelectorAll('a.full-click, a.thumb').forEach((link) => {
+        const target = link.getAttribute('href');
+        if (target && target.startsWith('#')) {
+          link.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            openLightbox(target);
+          });
+        }
+      });
+
+      // Bind close buttons and background to close
+      document.body.addEventListener('click', (ev) => {
+        const el = ev.target;
+        if (el && (el.matches('.lightbox .close') || el.matches('.lightbox .lightbox-bg'))) {
+          ev.preventDefault();
+          closeLightbox();
+        }
+      });
     });
   </script>
   <style>
@@ -80,12 +113,16 @@
     .rule { height: 1px; background: var(--rule); margin: 8px 0 10px; }
 
     .item {
+      position: relative;
       display: flex;
       align-items: center;
       gap: 16px;
       padding: 12px 0;
       border-bottom: 1px solid var(--rule);
+      cursor: pointer;
     }
+
+    .full-click { position: absolute; inset: 0; display: block; text-indent: -9999px; z-index: 1; }
 
     .thumb {
       display: inline-block;
@@ -107,18 +144,30 @@
     .price { font-size: 18px; font-weight: 700; }
     .desc { margin-top: 6px; color: var(--muted); font-size: 15px; }
 
-    /* Lightbox (pure CSS via :target) */
+    /* Lightbox */
     .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.75); display: none; align-items: center; justify-content: center; z-index: 9999; }
-    .lightbox:target { display: flex; }
-    .lightbox img { max-width: 92vw; max-height: 92vh; width: auto; height: auto; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+    .lightbox.open { display: flex; }
     .lightbox a.lightbox-bg { position: absolute; inset: 0; display: block; }
     .lightbox .close { position: fixed; top: 10px; right: 14px; color: #fff; text-decoration: none; font-size: 28px; line-height: 1; padding: 6px 10px; }
+
+    /* Card in lightbox */
+    .lightbox .card { background: #fff; color: var(--fg); max-width: 980px; width: 92vw; max-height: 92vh; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.5); display: flex; }
+    .lightbox .card-media { flex: 0 0 52%; background: #0000004e; display: flex; align-items: center; justify-content: center; }
+    .lightbox .card-media img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .lightbox .card-body { flex: 1 1 auto; padding: 20px; overflow: auto; }
+    .lightbox .card-title { font-size: 28px; font-weight: 800; margin: 0 0 8px; }
+    .lightbox .card-line2 { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .lightbox .card-title-ar { font-size: 24px; color: var(--accent); }
+    .lightbox .card-price { font-size: 24px; font-weight: 800; }
+    .lightbox .card-desc { color: var(--muted); font-size: 18px; line-height: 1.5; }
 
     /* Portrait vs Landscape tweaks */
     @media (orientation: portrait) {
       .thumb { width: 130px; height: 97.5px; }
       .line1, .title-ar, .price { font-size: 17px; }
       .desc { font-size: 14px; }
+      .lightbox .card { display: block; width: 94vw; }
+      .lightbox .card-media { height: 45vh; }
     }
 
     @media (min-width: 1000px) and (orientation: landscape) {
@@ -133,7 +182,7 @@
   <div class="page">
     <header>
       <h1>Restaurangmeny</h1>
-      <div class="note">Tryck på en bild för att förstora</div>
+      <div class="note">Tryck på en rätt för att visa detaljer</div>
     </header>
 
     <section class="section" id="huvudratter">
@@ -141,6 +190,7 @@
       <div class="rule"></div>
 
       <div class="item">
+        <a class="full-click" href="#img-biryani">Biryani</a>
         <a class="thumb" href="#img-biryani"><img src="generated/biryani.webp" alt="1. Biryani" /></a>
         <div class="content">
           <div class="line1">1. Biryani</div>
@@ -150,6 +200,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-fatthe">Fatthe</a>
         <a class="thumb" href="#img-fatthe"><img src="generated/fatthe.webp" alt="2. Fatthe" /></a>
         <div class="content">
           <div class="line1">2. Fatthe</div>
@@ -159,6 +210,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-lamm-ris">Lamm</a>
         <a class="thumb" href="#img-lamm-ris"><img src="generated/lamm-ris.webp" alt="3. Lammkött med ris" /></a>
         <div class="content">
           <div class="line1">3. Lammkött med ris</div>
@@ -168,6 +220,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-grillad-fisk">Fisk</a>
         <a class="thumb" href="#img-grillad-fisk"><img src="generated/1.webp" alt="4. Grillad fisk med ris" /></a>
         <div class="content">
           <div class="line1">4. Grillad fisk med ris</div>
@@ -186,6 +239,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-kyckling-curry">Kyckling curry</a>
         <a class="thumb" href="#img-kyckling-curry"><img src="generated/kyckling-curry.webp" alt="6. Kyckling curry" /></a>
         <div class="content">
           <div class="line1">6. Kyckling curry</div>
@@ -195,6 +249,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-kyckling-masala">Kyckling masala</a>
         <a class="thumb" href="#img-kyckling-masala"><img src="generated/kyckling-masala.webp" alt="7. Kyckling masala" /></a>
         <div class="content">
           <div class="line1">7. Kyckling masala</div>
@@ -204,6 +259,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-ruzmekli">Ruzmekli</a>
         <a class="thumb" href="#img-ruzmekli"><img src="generated/ruzmekli.webp" alt="8. Ruzmekli" /></a>
         <div class="content">
           <div class="line1">8. Ruzmekli</div>
@@ -213,6 +269,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-ris-babeaynatu">Ris babeaynatu</a>
         <a class="thumb" href="#img-ris-babeaynatu"><img src="generated/ris-babeaynatu.webp" alt="9. Ris babeaynatu" /></a>
         <div class="content">
           <div class="line1">9. Ris babeaynatu</div>
@@ -227,6 +284,7 @@
       <div class="rule"></div>
 
       <div class="item">
+        <a class="full-click" href="#img-injera-bebaynatu2">Babeaynatu</a>
         <a class="thumb" href="#img-injera-bebaynatu2"><img src="generated/injera-bebaynatu2.webp" alt="10. Babeaynatu" /></a>
         <div class="content">
           <div class="line1">10. Babeaynatu</div>
@@ -236,6 +294,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-injera-mix">Mix -babeaynatu</a>
         <a class="thumb" href="#img-injera-mix"><img src="generated/injera-mix.webp" alt="11. Mix -babeaynatu" /></a>
         <div class="content">
           <div class="line1">11. Mix -babeaynatu</div>
@@ -245,6 +304,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-injera-multimix">Valfria röror</a>
         <a class="thumb" href="#img-injera-multimix"><img src="generated/injera-multimix.webp" alt="12. Valfria röror" /></a>
         <div class="content">
           <div class="line1">12. Valfria röror</div>
@@ -259,6 +319,7 @@
       <div class="rule"></div>
 
       <div class="item">
+        <a class="full-click" href="#img-ful-mudammas">Foul mudammas</a>
         <a class="thumb" href="#img-ful-mudammas"><img src="generated/ful-mudammas.webp" alt="13. Foul mudammas" /></a>
         <div class="content">
           <div class="line1">13. Foul mudammas</div>
@@ -268,6 +329,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-fatthe-foul">Fatthe foul</a>
         <a class="thumb" href="#img-fatthe-foul"><img src="generated/fatthe-foul.webp" alt="14. Fatthe foul" /></a>
         <div class="content">
           <div class="line1">14. Fatthe foul</div>
@@ -277,6 +339,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-frittata">Frittata</a>
         <a class="thumb" href="#img-frittata"><img src="generated/fritata.webp" alt="15. Frittata" /></a>
         <div class="content">
           <div class="line1">15. Frittata</div>
@@ -286,6 +349,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-kicha-fitfit">Kicha fitfit</a>
         <a class="thumb" href="#img-kicha-fitfit"><img src="generated/kicha-fitfit.webp" alt="16. Kicha fitfit" /></a>
         <div class="content">
           <div class="line1">16. Kicha fitfit</div>
@@ -295,6 +359,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-jibna">Jibna</a>
         <a class="thumb" href="#img-jibna"><img src="generated/jibna.webp" alt="17. Jibna" /></a>
         <div class="content">
           <div class="line1">17. Jibna</div>
@@ -304,6 +369,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-tonfiskrora">Tonfiskröra</a>
         <a class="thumb" href="#img-tonfiskrora"><img src="generated/tonfiskröra.webp" alt="18. Tonfiskröra" /></a>
         <div class="content">
           <div class="line1">18. Tonfiskröra</div>
@@ -318,6 +384,7 @@
       <div class="rule"></div>
 
       <div class="item">
+        <a class="full-click" href="#img-bamia">Bamia</a>
         <a class="thumb" href="#img-bamia"><img src="generated/bamia.webp" alt="19. Bamia" /></a>
         <div class="content">
           <div class="line1">19. Bamia</div>
@@ -327,6 +394,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-zigni">Zigni</a>
         <a class="thumb" href="#img-zigni"><img src="generated/zigni.webp" alt="20. Zigni" /></a>
         <div class="content">
           <div class="line1">20. Zigni</div>
@@ -336,6 +404,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-molokhia">Molokhia</a>
         <a class="thumb" href="#img-molokhia"><img src="generated/molokhia.webp" alt="21. Molokhia" /></a>
         <div class="content">
           <div class="line1">21. Molokhia</div>
@@ -345,6 +414,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-alicha-potatis">Alicha med potatis</a>
         <a class="thumb" href="#img-alicha-potatis"><img src="generated/alicha-potatis.webp" alt="22. Alicha med potatis" /></a>
         <div class="content">
           <div class="line1">22. Alicha med potatis</div>
@@ -354,6 +424,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-alicha-vitkal">Alicha med vitkål</a>
         <a class="thumb" href="#img-alicha-vitkal"><img src="generated/alicha-vitkål.webp" alt="23. Alicha med vitkål" /></a>
         <div class="content">
           <div class="line1">23. Alicha med vitkål</div>
@@ -363,6 +434,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-friterade-gronsaker">Friterade grönsaker</a>
         <a class="thumb" href="#img-friterade-gronsaker"><img src="generated/friterade-grönsaker.webp" alt="24. Friterade grönsaker" /></a>
         <div class="content">
           <div class="line1">24. Friterade grönsaker</div>
@@ -372,6 +444,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-fasoulia">Fasoulia</a>
         <a class="thumb" href="#img-fasoulia"><img src="generated/fasouli.webp" alt="25. Fasoulia" /></a>
         <div class="content">
           <div class="line1">25. Fasoulia</div>
@@ -381,6 +454,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-shiro">Shiro</a>
         <a class="thumb" href="#img-shiro"><img src="generated/shiro.webp" alt="26. Shiro" /></a>
         <div class="content">
           <div class="line1">26. Shiro</div>
@@ -390,6 +464,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-bamia-mafrooka">Bamia/Molokhia mafrooka</a>
         <a class="thumb" href="#img-bamia-mafrooka"><img src="generated/bamia-mafrooka.webp" alt="27. Bamia/Molokhia mafrooka" /></a>
         <div class="content">
           <div class="line1">27. Bamia/Molokhia mafrooka</div>
@@ -399,6 +474,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-ades">Ades</a>
         <a class="thumb" href="#img-ades"><img src="generated/ades.webp" alt="28. Ades" /></a>
         <div class="content">
           <div class="line1">28. Ades</div>
@@ -409,37 +485,317 @@
     </section>
 
     <!-- Lightboxes (placed at end of document) -->
-    <div id="img-biryani" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/biryani.webp" alt="Biryani" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-fatthe" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/fatthe.webp" alt="Fatthe" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-lamm-ris" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/lamm-ris.webp" alt="Lammkött med ris" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-grillad-fisk" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/1.webp" alt="Grillad fisk med ris" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-grillad-kyckling" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/grillad-kyckling.webp" alt="Grillad Kyckling" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-kyckling-curry" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/kyckling-curry.webp" alt="Kyckling curry" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-kyckling-masala" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/kyckling-masala.webp" alt="Kyckling masala" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-ruzmekli" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/ruzmekli.webp" alt="Ruzmekli" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-ris-babeaynatu" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/ris-babeaynatu.webp" alt="Ris babeaynatu" /><a class="close" href="#" aria-label="Close">×</a></div>
+    <div id="img-biryani" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/biryani.webp" alt="Biryani" /></div>
+        <div class="card-body">
+          <div class="card-title">1. Biryani</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">برياني</span><span class="card-price">149:-</span></div>
+          <div class="card-desc">En kryddig risrätt som kan fås med kött, kyckling eller grönsaker.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-fatthe" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/fatthe.webp" alt="Fatthe" /></div>
+        <div class="card-body">
+          <div class="card-title">2. Fatthe</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">فتة</span><span class="card-price">149:-</span></div>
+          <div class="card-desc">Kött med ris och bröd doppade i gryta.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-lamm-ris" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/lamm-ris.webp" alt="Lammkött med ris" /></div>
+        <div class="card-body">
+          <div class="card-title">3. Lammkött med ris</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">لحم خروف مع أرز</span><span class="card-price">149:-</span></div>
+          <div class="card-desc">Lammkött med ris, grönsaker och yoghurtsås.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-grillad-fisk" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/1.webp" alt="Grillad fisk med ris" /></div>
+        <div class="card-body">
+          <div class="card-title">4. Grillad fisk med ris</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">سمك مشوي مع أرز</span><span class="card-price">149:-</span></div>
+          <div class="card-desc">Grillad lax med ris och tillbehör.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-grillad-kyckling" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/grillad-kyckling.webp" alt="Grillad Kyckling" /></div>
+        <div class="card-body">
+          <div class="card-title">5. Grillad Kyckling</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">دجاج مشوي</span><span class="card-price">139:-</span></div>
+          <div class="card-desc">Grillad kycklingfilé med ris, grönsaker och yoghurtsås.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-kyckling-curry" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/kyckling-curry.webp" alt="Kyckling curry" /></div>
+        <div class="card-body">
+          <div class="card-title">6. Kyckling curry</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">دجاج كوري</span><span class="card-price">139:-</span></div>
+          <div class="card-desc">Kyckling med currysås.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-kyckling-masala" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/kyckling-masala.webp" alt="Kyckling masala" /></div>
+        <div class="card-body">
+          <div class="card-title">7. Kyckling masala</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">دجاج مسالا</span><span class="card-price">139:-</span></div>
+          <div class="card-desc">Kyckling masala.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-ruzmekli" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/ruzmekli.webp" alt="Ruzmekli" /></div>
+        <div class="card-body">
+          <div class="card-title">8. Ruzmekli</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">رزمكلي</span><span class="card-price">129:-</span></div>
+          <div class="card-desc">Friterat ris med grönsaker.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-ris-babeaynatu" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/ris-babeaynatu.webp" alt="Ris babeaynatu" /></div>
+        <div class="card-body">
+          <div class="card-title">9. Ris babeaynatu</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">أرز بياينتو</span><span class="card-price">399:-</span></div>
+          <div class="card-desc">Ris med mix av kött, kyckling och röror</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
 
-    <div id="img-injera-bebaynatu2" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/injera-bebaynatu2.webp" alt="Babeaynatu" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-injera-mix" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/injera-mix.webp" alt="Mix -babeaynatu" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-injera-multimix" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/injera-multimix.webp" alt="Valfria röror" /><a class="close" href="#" aria-label="Close">×</a></div>
+    <div id="img-injera-bebaynatu2" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/injera-bebaynatu2.webp" alt="Babeaynatu" /></div>
+        <div class="card-body">
+          <div class="card-title">10. Babeaynatu</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">إنجيرا بياينتو</span><span class="card-price">300:-</span></div>
+          <div class="card-desc">Injera med kött, linser och grönsaker.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-injera-mix" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/injera-mix.webp" alt="Mix -babeaynatu" /></div>
+        <div class="card-body">
+          <div class="card-title">11. Mix -babeaynatu</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">إنجيرا بياينتو ميكس</span><span class="card-price">300:-</span></div>
+          <div class="card-desc">Injera med olika kött och grönsaker.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-injera-multimix" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/injera-multimix.webp" alt="Valfria röror" /></div>
+        <div class="card-body">
+          <div class="card-title">12. Valfria röror</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">إنجيرا/كسرى مع الأضافات</span><span class="card-price">130:-</span></div>
+          <div class="card-desc">Injera med en valfri röra, +30kr per tillval.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
 
-    <div id="img-ful-mudammas" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/ful-mudammas.webp" alt="Foul mudammas" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-fatthe-foul" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/fatthe-foul.webp" alt="Fatthe foul" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-frittata" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/fritata.webp" alt="Frittata" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-kicha-fitfit" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/kicha-fitfit.webp" alt="Kicha fitfit" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-jibna" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/jibna.webp" alt="Jibna" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-tonfiskrora" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/tonfiskröra.webp" alt="Tonfiskröra" /><a class="close" href="#" aria-label="Close">×</a></div>
+    <div id="img-ful-mudammas" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/ful-mudammas.webp" alt="Foul mudammas" /></div>
+        <div class="card-body">
+          <div class="card-title">13. Foul mudammas</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">فول مصلح</span><span class="card-price">99:-</span></div>
+          <div class="card-desc">Favabönor med kokt ägg och bröd.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-fatthe-foul" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/fatthe-foul.webp" alt="Fatthe foul" /></div>
+        <div class="card-body">
+          <div class="card-title">14. Fatthe foul</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">فتة صلصة</span><span class="card-price">99:-</span></div>
+          <div class="card-desc">Favabönor med grönsaker och egg.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-frittata" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/fritata.webp" alt="Frittata" /></div>
+        <div class="card-body">
+          <div class="card-title">15. Frittata</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">بيض مغلي</span><span class="card-price">99:-</span></div>
+          <div class="card-desc">Äggröra med tomat.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-kicha-fitfit" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/kicha-fitfit.webp" alt="Kicha fitfit" /></div>
+        <div class="card-body">
+          <div class="card-title">16. Kicha fitfit</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">كجا فيتفت</span><span class="card-price">99:-</span></div>
+          <div class="card-desc"></div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-jibna" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/jibna.webp" alt="Jibna" /></div>
+        <div class="card-body">
+          <div class="card-title">17. Jibna</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">جبنة</span><span class="card-price">99:-</span></div>
+          <div class="card-desc">Salladsost med tomat och lök.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-tonfiskrora" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/tonfiskröra.webp" alt="Tonfiskröra" /></div>
+        <div class="card-body">
+          <div class="card-title">18. Tonfiskröra</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">خليط تونة</span><span class="card-price">99:-</span></div>
+          <div class="card-desc">Tonfiskröra med tomat och lök.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
 
-    <div id="img-bamia" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/bamia.webp" alt="Bamia" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-zigni" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/zigni.webp" alt="Zigni" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-molokhia" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/molokhia.webp" alt="Molokhia" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-alicha-potatis" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/alicha-potatis.webp" alt="Alicha med potatis" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-alicha-vitkal" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/alicha-vitkål.webp" alt="Alicha med vitkål" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-friterade-gronsaker" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/friterade-grönsaker.webp" alt="Friterade grönsaker" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-fasoulia" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/fasouli.webp" alt="Fasoulia" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-shiro" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/shiro.webp" alt="Shiro" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-bamia-mafrooka" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/bamia-mafrooka.webp" alt="Bamia/Molokhia mafrooka" /><a class="close" href="#" aria-label="Close">×</a></div>
-    <div id="img-ades" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a><img src="generated/ades.webp" alt="Ades" /><a class="close" href="#" aria-label="Close">×</a></div>
+    <div id="img-bamia" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/bamia.webp" alt="Bamia" /></div>
+        <div class="card-body">
+          <div class="card-title">19. Bamia</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">باميا</span><span class="card-price">30:-</span></div>
+          <div class="card-desc">Lammgryta med okra.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-zigni" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/zigni.webp" alt="Zigni" /></div>
+        <div class="card-body">
+          <div class="card-title">20. Zigni</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">زقني</span><span class="card-price">59:-</span></div>
+          <div class="card-desc">Köttgryta med berbere och tomater.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-molokhia" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/molokhia.webp" alt="Molokhia" /></div>
+        <div class="card-body">
+          <div class="card-title">21. Molokhia</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">مولوخيا</span><span class="card-price">30:-</span></div>
+          <div class="card-desc">Gryta på juteblad.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-alicha-potatis" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/alicha-potatis.webp" alt="Alicha med potatis" /></div>
+        <div class="card-body">
+          <div class="card-title">22. Alicha med potatis</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">اليتشا مع بطاطس</span><span class="card-price">30:-</span></div>
+          <div class="card-desc">Potatis, gröna bönor, morot.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-alicha-vitkal" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/alicha-vitkål.webp" alt="Alicha med vitkål" /></div>
+        <div class="card-body">
+          <div class="card-title">23. Alicha med vitkål</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">اليتشا مع كروم</span><span class="card-price">30:-</span></div>
+          <div class="card-desc">Vitkål och lök.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-friterade-gronsaker" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/friterade-grönsaker.webp" alt="Friterade grönsaker" /></div>
+        <div class="card-body">
+          <div class="card-title">24. Friterade grönsaker</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">خضروات مقلي</span><span class="card-price">30:-</span></div>
+          <div class="card-desc"></div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-fasoulia" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/fasouli.webp" alt="Fasoulia" /></div>
+        <div class="card-body">
+          <div class="card-title">25. Fasoulia</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">فاسوليا</span><span class="card-price">30:-</span></div>
+          <div class="card-desc">Vita bönor med kött, lök och tomat.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-shiro" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/shiro.webp" alt="Shiro" /></div>
+        <div class="card-body">
+          <div class="card-title">26. Shiro</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">شيرو</span><span class="card-price">30:-</span></div>
+          <div class="card-desc">Gryta gjord på shiropulver, lök och tomat.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-bamia-mafrooka" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/bamia-mafrooka.webp" alt="Bamia/Molokhia mafrooka" /></div>
+        <div class="card-body">
+          <div class="card-title">27. Bamia/Molokhia mafrooka</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">باميا/مولوخيا مافروكا</span><span class="card-price">30:-</span></div>
+          <div class="card-desc">Bamia eller Molokhia med mafrooka.</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
+    <div id="img-ades" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
+      <div class="card">
+        <div class="card-media"><img src="generated/ades.webp" alt="Ades" /></div>
+        <div class="card-body">
+          <div class="card-title">28. Ades</div>
+          <div class="card-line2"><span class="card-title-ar" lang="ar" dir="rtl">عدس</span><span class="card-price">30:-</span></div>
+          <div class="card-desc">Gryta på röda linser och grönsaker</div>
+        </div>
+      </div>
+      <a class="close" href="#" aria-label="Close">×</a>
+    </div>
   </div>
   </div>
 </body>
