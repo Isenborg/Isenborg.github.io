@@ -15,15 +15,6 @@
           navigator.serviceWorker.register('sw.js').catch(console.error);
         });
       }
-      document.addEventListener('DOMContentLoaded', () => {
-        const requestFullscreen = () => {
-          const el = document.documentElement;
-          const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
-          if (req) req.call(el);
-        };
-        window.addEventListener('click', requestFullscreen, { once: true });
-        window.addEventListener('touchend', requestFullscreen, { once: true });
-      });
     </script>
     
 </head>

@@ -17,19 +17,7 @@
         navigator.serviceWorker.register('sw.js').catch(console.error);
       });
     }
-    // Optional: request fullscreen on first user interaction when running in browser
     document.addEventListener('DOMContentLoaded', () => {
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-      if (!isStandalone) {
-        const requestFullscreen = () => {
-          const el = document.documentElement;
-          const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
-          if (req) req.call(el);
-        };
-        window.addEventListener('click', requestFullscreen, { once: true });
-        window.addEventListener('touchend', requestFullscreen, { once: true });
-      }
-
       // JS lightbox that preserves scroll position
       let lastScrollY = 0;
       const openLightbox = (id) => {
@@ -230,6 +218,7 @@
       </div>
 
       <div class="item">
+        <a class="full-click" href="#img-grillad-kyckling">Grillad Kyckling</a>
         <a class="thumb" href="#img-grillad-kyckling"><img src="generated/grillad-kyckling.webp" alt="5. Grillad Kyckling" /></a>
         <div class="content">
           <div class="line1">5. Grillad Kyckling</div>
@@ -493,7 +482,7 @@
         <a class="thumb" href="#img-liten-kaffe"><img src="generated/cofee.webp" alt="29. Liten kaffe" /></a>
         <div class="content">
           <div class="line1">29. Liten kaffe</div>
-          <div class="line2"><span class="price">30:-</span></div>
+          <div class="line2"><span class="title-ar"></span><span class="price">30:-</span></div>
           <div class="desc">Eritreanskt kaffe</div>
         </div>
       </div>
@@ -503,7 +492,7 @@
         <a class="thumb" href="#img-stor-kaffe"><img src="generated/cofee.webp" alt="30. Stor kaffe" /></a>
         <div class="content">
           <div class="line1">30. Stor kaffe</div>
-          <div class="line2"><span class="price">75:-</span></div>
+          <div class="line2"><span class="title-ar"></span><span class="price">75:-</span></div>
           <div class="desc">Eritreanskt kaffe</div>
         </div>
       </div>
@@ -513,7 +502,7 @@
         <a class="thumb" href="#img-te"><img src="generated/tea.webp" alt="31. Te" /></a>
         <div class="content">
           <div class="line1">31. Te</div>
-          <div class="line2"><span class="price">10:-</span></div>
+          <div class="line2"><span class="title-ar"></span><span class="price">10:-</span></div>
           <div class="desc"></div>
         </div>
       </div>
@@ -523,7 +512,7 @@
         <a class="thumb" href="#img-lask"><img src="generated/soda.webp" alt="32. Läsk" /></a>
         <div class="content">
           <div class="line1">32. Läsk</div>
-          <div class="line2"><span class="price">15:-</span></div>
+          <div class="line2"><span class="title-ar"></span><span class="price">15:-</span></div>
           <div class="desc"></div>
         </div>
       </div>
@@ -538,7 +527,7 @@
         <a class="thumb" href="#img-jordgubbsjuice"><img src="generated/juice_strawberry.webp" alt="33. Jordgubbsjuice" /></a>
         <div class="content">
           <div class="line1">33. Jordgubbsjuice</div>
-          <div class="line2"><span class="price">69:-</span></div>
+          <div class="line2"><span class="title-ar"></span><span class="price">69:-</span></div>
           <div class="desc"></div>
         </div>
       </div>
@@ -548,7 +537,7 @@
         <a class="thumb" href="#img-myntajuice"><img src="generated/mynta_juice.webp" alt="34. Myntajuice" /></a>
         <div class="content">
           <div class="line1">34. Myntajuice</div>
-          <div class="line2"><span class="price">69:-</span></div>
+          <div class="line2"><span class="title-ar"></span><span class="price">69:-</span></div>
           <div class="desc"></div>
         </div>
       </div>
@@ -558,7 +547,7 @@
         <a class="thumb" href="#img-mangojuice"><img src="generated/mango_juice.webp" alt="35. Mangojuice" /></a>
         <div class="content">
           <div class="line1">35. Mangojuice</div>
-          <div class="line2"><span class="price">69:-</span></div>
+          <div class="line2"><span class="title-ar"></span><span class="price">69:-</span></div>
           <div class="desc"></div>
         </div>
       </div>
@@ -568,7 +557,7 @@
         <a class="thumb" href="#img-apelsinjuice"><img src="generated/orange_juice.webp" alt="36. Apelsinjuice" /></a>
         <div class="content">
           <div class="line1">36. Apelsinjuice</div>
-          <div class="line2"><span class="price">69:-</span></div>
+          <div class="line2"><span class="title-ar"></span><span class="price">69:-</span></div>
           <div class="desc"></div>
         </div>
       </div>
@@ -938,7 +927,7 @@
 
     <div id="img-jordgubbsjuice" class="lightbox"><a href="#" class="lightbox-bg" aria-label="Close"></a>
       <div class="card">
-        <div class="card-media"><img src="generated/strawberrry_juice.webp" alt="Jordgubbsjuice" /></div>
+        <div class="card-media"><img src="generated/juice_strawberry.webp" alt="Jordgubbsjuice" /></div>
         <div class="card-body">
           <div class="card-title">33. Jordgubbsjuice</div>
           <div class="card-line2"><span class="card-price">69:-</span></div>
