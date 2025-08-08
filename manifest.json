@@ -1,9 +1,9 @@
 {
   "name": "Restaurant Menu",
   "short_name": "Menu",
-  "start_url": "index.html",
+  "start_url": "menu_tablet.html",
   "display": "fullscreen",
-  "orientation": "landscape",
+  "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#000000",
   "icons": [
