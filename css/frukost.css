@@ -1,0 +1,123 @@
+/* Frukost specific styles */
+.frukost-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.5rem;
+    flex: 1;
+    overflow: hidden;
+    padding: 0 0.5rem;
+    align-items: start;
+}
+
+.frukost-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.2rem;
+    transition: all 0.4s ease;
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.frukost-item .item-image {
+    width: 220px;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease;
+    animation: float 4s ease-in-out infinite;
+}
+
+.frukost-item .item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+    transition: all 0.4s ease;
+}
+
+.frukost-item .item-image img {
+    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6));
+    transform: rotate(5deg);
+}
+
+.frukost-item .item-content {
+    text-align: center;
+    width: 100%;
+    max-width: 220px;
+}
+
+.frukost-item .item-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    margin-bottom: 0.2rem;
+    transition: all 0.3s ease;
+    animation: textGlow 3s ease-in-out infinite alternate;
+}
+
+.frukost-item .item-description {
+    font-size: 0.75rem;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+    min-height: 1.5em;
+    transition: all 0.3s ease;
+}
+
+.frukost-item .item-price {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #ffeb3b; /* Keeping the injera price color for now, can be adjusted later */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    text-align: center;
+    transition: all 0.3s ease;
+    animation: priceGlow 2s ease-in-out infinite alternate;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes textGlow {
+    from {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+    to {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+}
+
+@keyframes priceGlow {
+    from {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+    to {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 235, 59, 0.7);
+    }
+}

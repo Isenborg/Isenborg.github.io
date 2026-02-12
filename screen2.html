@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Menu - Screen 2</title>
+    <link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+    <div id="menu-container">
+        <!-- Menu items will be loaded here -->
+    </div>
+
+    <script src="menu-loader.js"></script>
+    <script>
+        async function initScreen2() {
+            await menuLoader.loadMenuData();
+            menuLoader.setCategoriesForScreen(['Extra', 'Frukost']);
+            menuLoader.startCategoryRotation();
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', initScreen2);
+    </script>
+</body>
+</html>

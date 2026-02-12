@@ -1,0 +1,197 @@
+/* Base styles shared across all categories */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+/* Huvudrätter themed background */
+body.huvudratter-theme {
+    background: url('../generated/background2.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+#menu-container {
+    flex: 1;
+    padding: 1rem;
+    transition: opacity 0.5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.category-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.category-header h1 {
+    font-size: 2rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: slideInFromTop 0.8s ease-out, headerPulse 4s ease-in-out infinite;
+}
+
+/* Huvudrätter themed header */
+body.huvudratter-theme .category-header h1 {
+    color: #f5f1eb;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8), 0 0 20px rgba(183, 158, 128, 0.6);
+}
+
+/* Dual language title styling */
+.item-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.title-swedish {
+    font-weight: bold;
+    color: inherit;
+}
+
+.title-arabic {
+    font-weight: bold;
+    color: inherit;
+    text-align: right;
+    direction: rtl;
+    font-family: 'Arial', 'Tahoma', sans-serif;
+    opacity: 0.9;
+}
+
+/* Arabic language support */
+body.arabic-language {
+    direction: rtl;
+    font-family: 'Arial', 'Tahoma', sans-serif;
+}
+
+body.arabic-language .category-header h1,
+body.arabic-language .item-title,
+body.arabic-language .item-description,
+body.arabic-language .item-price {
+    text-align: right;
+}
+
+body.arabic-language .menu-item,
+body.arabic-language .secondary-item {
+    text-align: right;
+}
+
+body.arabic-language .secondary-item {
+    flex-direction: row-reverse;
+}
+
+body.arabic-language .info-section .info-text {
+    text-align: center;
+    direction: rtl;
+}
+
+.category-indicators {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1rem;
+}
+
+.indicator-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transition: background 0.3s ease;
+}
+
+.indicator-dot.active {
+    background: white;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    animation: dotPulse 1.5s ease-in-out infinite;
+}
+
+/* Shared keyframe animations */
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes headerPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+@keyframes dotPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    }
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 30px rgba(255, 255, 255, 1);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes textGlow {
+    from {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+    to {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+}
+
+@keyframes priceGlow {
+    from {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+    to {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 235, 59, 0.6);
+    }
+}
