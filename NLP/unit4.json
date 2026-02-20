@@ -1,0 +1,725 @@
+{
+  "unit": "Unit 4",
+  "lectures": [
+    {
+      "id": "4.1",
+      "questions": [
+        {
+          "number": 1,
+          "question": "Assistant models are trained in several stages. Which of the following stages does not involve the language modelling objective?",
+          "options": [
+            {
+              "text": "reward modelling",
+              "correct": true,
+              "explanation": "Reward modelling focuses on learning to predict human preferences and does not use the language modelling objective, which involves next-token prediction."
+            },
+            {
+              "text": "unsupervised pre-training",
+              "correct": false,
+              "explanation": "Unsupervised pre-training directly uses the language modelling objective to predict the next token in a sequence."
+            },
+            {
+              "text": "instruction fine-tuning",
+              "correct": false,
+              "explanation": "Instruction fine-tuning still uses the language modelling objective but incorporates task-specific instructions to guide responses."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Consider a customer support chatbot with a female avatar. Which of the following outputs would be an example showing the limitation of language modelling as an objective in instruction fine-tuning?",
+          "options": [
+            {
+              "text": "I'm a woman so I just don't understand.",
+              "correct": true,
+              "explanation": "This output is okay from a language modelling perspective but demonstrates a failure in aligning the model to avoid generating biased or inappropriate statements."
+            },
+            {
+              "text": "Not I understand sorry sorry.",
+              "correct": false,
+              "explanation": "While grammatically incorrect, this example reflects a language modelling failure, not a limitation in the objective."
+            },
+            {
+              "text": "Can you repeat that? I am not sure I understand.",
+              "correct": false,
+              "explanation": "This is an appropriate and coherent response, showing no clear limitation of the language modelling objective."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "What is the purpose of reward models in LLM training?",
+          "options": [
+            {
+              "text": "to act as a proxy for immediate human feedback",
+              "correct": true,
+              "explanation": "Reward models are trained to predict human preferences and serve as a proxy for human feedback during reinforcement learning."
+            },
+            {
+              "text": "to suggest suitable payment for human annotators",
+              "correct": false,
+              "explanation": "Reward models are unrelated to annotator compensation."
+            },
+            {
+              "text": "to increase the computational efficiency of the training process",
+              "correct": false,
+              "explanation": "Reward models are used to align the model's behaviour with human preferences, not to improve computational efficiency."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "For a well-aligned LLM, which of the following is the most plausible reward model loss for the two completions from the moon landing example?",
+          "options": [
+            {
+              "text": "0.11",
+              "correct": true,
+              "explanation": "A low loss indicates that the reward model successfully distinguishes between the preferred and non-preferred completions. For a well-aligned model, R(x, y+) - R(x, y-) is positive, the sigmoid output is close to 1, and the loss will be low."
+            },
+            {
+              "text": "0.69",
+              "correct": false,
+              "explanation": "A loss around 0.69 corresponds to a sigmoid output of 0.5, suggesting that the reward model is not distinguishing between the preferred and non-preferred completions."
+            },
+            {
+              "text": "2.30",
+              "correct": false,
+              "explanation": "A higher loss like 2.30 implies the model is failing to align with human preferences by assigning a higher reward to the non-preferred completion than to the preferred one."
+            }
+          ],
+          "images": ["images/moon-landing.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "What is the goal of policy gradient methods?",
+          "options": [
+            {
+              "text": "maximise the probability of generating outputs with high reward",
+              "correct": true,
+              "explanation": "Policy gradient methods aim to optimise the model's parameters to increase the likelihood of generating outputs that receive higher rewards."
+            },
+            {
+              "text": "maximise the reward of generated outputs",
+              "correct": false,
+              "explanation": "While related, policy gradient focuses on increasing the probability of high-reward outputs rather than the absolute reward. (Note that the reward model is fixed at this stage of the training.)"
+            },
+            {
+              "text": "minimise the perplexity of the generated outputs",
+              "correct": false,
+              "explanation": "Minimising perplexity is associated with language modelling, not reinforcement learning using policy gradients."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "4.2",
+      "questions": [
+        {
+          "number": 1,
+          "question": "What core concern motivates this paper's investigation of language models and fact completion?",
+          "options": [
+            {
+              "text": "That correct answers alone may not prove that a model has truly memorised a fact",
+              "correct": true,
+              "explanation": "This is precisely the paper's motivation: a correct prediction could stem from heuristics, guesswork, or actual memorisation, and prior work conflates these."
+            },
+            {
+              "text": "That language models cannot generalise beyond their training data",
+              "correct": false,
+              "explanation": "The paper does not investigate generalisation failure; it investigates whether correct predictions reflect genuine fact memorisation."
+            },
+            {
+              "text": "That language models generate ungrammatical sentences when prompted with facts",
+              "correct": false,
+              "explanation": "Grammaticality is never discussed as a concern."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Which criterion distinguishes guesswork from exact fact recall in the PRISM taxonomy?",
+          "options": [
+            {
+              "text": "Whether the model's prediction remains stable across paraphrased prompts",
+              "correct": true,
+              "explanation": "This is the \"confident prediction\" criterion: guesswork is defined as a valid-type prediction that is not consistent across paraphrases (appearing in the top-3 for fewer than 5 templates), whereas exact fact recall requires confidence (at least 5 templates)."
+            },
+            {
+              "text": "Whether the prompt contains a real-world subject",
+              "correct": false,
+              "explanation": "Both guesswork and exact fact recall use real subjects; synthetic subjects are used for heuristics recall."
+            },
+            {
+              "text": "Whether the predicted token is of the correct semantic type",
+              "correct": false,
+              "explanation": "Both scenarios require a valid-type prediction (the \"fact completion\" criterion); that criterion alone does not separate them."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Why do the authors use synthetic subjects when testing for heuristic recall?",
+          "options": [
+            {
+              "text": "To ensure that predictions do not rely on real-world memorised facts",
+              "correct": true,
+              "explanation": "Synthetic subjects guarantee that the model cannot have memorised any fact about them. Confident predictions must therefore stem from heuristics, not memory."
+            },
+            {
+              "text": "To increase dataset size without manual annotation",
+              "correct": false,
+              "explanation": "Dataset size is not the motivation."
+            },
+            {
+              "text": "To make the prediction task harder for the language model",
+              "correct": false,
+              "explanation": "Task difficulty for the model is not the goal; controlling for memorisation is."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "What do the causal tracing results show about exact fact recall compared to generic language modelling?",
+          "options": [
+            {
+              "text": "Only exact fact recall shows strong importance of mid-layer MLPs at the last subject token",
+              "correct": true,
+              "explanation": "The experiments show a clear peak in (last subject token, mid-layer) MLP states only for exact fact recall. Generic language modelling shows no such peak, instead showing importance of late-layer last-token states."
+            },
+            {
+              "text": "Generic language modelling relies more on subject tokens than fact recall",
+              "correct": false,
+              "explanation": "The opposite is true; generic LM shows negligible importance for subject-position states."
+            },
+            {
+              "text": "Both exhibit strong signals in early attention layers",
+              "correct": false,
+              "explanation": "Neither scenario is characterised by early attention layer dominance in the causal tracing results."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "What is the main conclusion when comparing causal tracing and information flow across the PRISM scenarios?",
+          "options": [
+            {
+              "text": "Different behavioral scenarios correspond to different internal mechanisms",
+              "correct": true,
+              "explanation": "This is the paper's central finding: each of the four scenarios produces distinct causal tracing and information flow patterns, meaning internal mechanisms differ across scenarios."
+            },
+            {
+              "text": "Accurate predictions always rely on the same internal mechanism",
+              "correct": false,
+              "explanation": "The whole point is that even among accurate predictions (exact fact recall vs. heuristics vs. guesswork), the internal mechanisms differ."
+            },
+            {
+              "text": "Only heuristic recall differs internally from exact fact recall",
+              "correct": false,
+              "explanation": "All four scenarios show distinct patterns from one another, including guesswork and generic language modelling."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "4.3",
+      "questions": [
+        {
+          "number": 1,
+          "question": "What is not a potential benefit of quantisation in language model training?",
+          "options": [
+            {
+              "text": "The model becomes more robust to rounding errors.",
+              "correct": true,
+              "explanation": "Quantisation can actually make models more sensitive to rounding errors, as it reduces the precision of the parameters."
+            },
+            {
+              "text": "Training is faster.",
+              "correct": false,
+              "explanation": "Quantisation can speed up training by reducing the computational load, especially on hardware that supports lower precision arithmetic."
+            },
+            {
+              "text": "The trained model requires less memory.",
+              "correct": false,
+              "explanation": "Quantisation reduces the memory footprint of the model by using fewer bits to represent each parameter, which can be beneficial for deployment and inference."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Consider a 100-billion-parameter LLM that stores all of its parameters as 32-bit floats. How much memory do we save by storing half of the parameters with half precision in a mixed-precision setup?",
+          "options": [
+            {
+              "text": "100 GB",
+              "correct": true,
+              "explanation": "In a mixed-precision setup where half of the parameters are stored in 16-bit precision, we save 16 bits for each of those parameters. Since there are 50 billion parameters stored in half precision, the total memory saved is: 50 x 10^9 x 16 bits = 800 x 10^9 bits = 100 GB."
+            },
+            {
+              "text": "200 GB",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "400 GB",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Consider the formula W0 + delta_W = W0 + BA in the explanation of LoRA. Which of the matrices in this formula is trained during LoRA training?",
+          "options": [
+            {
+              "text": "W0",
+              "correct": false,
+              "explanation": "W0 is the original weight matrix that is kept frozen during LoRA training."
+            },
+            {
+              "text": "delta_W",
+              "correct": false,
+              "explanation": "delta_W is the change in weights that is computed from B and A, and is not directly trained."
+            },
+            {
+              "text": "BA",
+              "correct": true,
+              "explanation": "The product BA represents the low-rank update to the original weights, so B and A are the matrices that are trained during LoRA training."
+            }
+          ],
+          "images": ["images/lora.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "Consider the formula W0 + delta_W = W0 + BA once more. If W0 is a 200-by-100 matrix and delta_W has rank 10, how many entries does B have?",
+          "options": [
+            {
+              "text": "1000",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "2000",
+              "correct": true,
+              "explanation": "The matrix B has dimensions 200x10, and the matrix A has dimensions 10x100. Therefore, the number of entries in B is 200 x 10 = 2000."
+            },
+            {
+              "text": "20000",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": ["images/lora.png"],
+          "references_previous_question": true
+        },
+        {
+          "number": 5,
+          "question": "What is the optimal rank to choose for LoRA training?",
+          "options": [
+            {
+              "text": "2",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "4",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "depends on the task",
+              "correct": true,
+              "explanation": "The optimal rank for LoRA training can vary depending on the specific task and the model architecture. It is often determined empirically through experimentation, as different tasks may require different levels of expressiveness in the low-rank updates."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "4.4",
+      "questions": [
+        {
+          "number": 1,
+          "question": "Which of the following LLM tasks is most affected by the problem of staleness?",
+          "options": [
+            {
+              "text": "stock market prediction",
+              "correct": true,
+              "explanation": "Stock market prediction relies heavily on up-to-date information, and staleness can lead to outdated or irrelevant predictions."
+            },
+            {
+              "text": "translation from Latin to English",
+              "correct": false,
+              "explanation": "While translation can benefit from current linguistic trends (though perhaps not for Latin), it is less affected by staleness compared to tasks that require real-time information."
+            },
+            {
+              "text": "sentiment classification",
+              "correct": false,
+              "explanation": "Sentiment classification is less affected by staleness because it typically does not rely on real-time information."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "What problem is illustrated by the GDPR example mentioned in the lecture?",
+          "options": [
+            {
+              "text": "revisions",
+              "correct": true,
+              "explanation": "The GDPR example illustrates the problem of revisions - the need to change the language model, e.g., by removing personal information due to legal requirements."
+            },
+            {
+              "text": "hallucination",
+              "correct": false,
+              "explanation": "Hallucination refers to the generation of plausible but incorrect information, which is not the issue highlighted by the GDPR example."
+            },
+            {
+              "text": "attribution",
+              "correct": false,
+              "explanation": "Attribution concerns the ability to trace the source of information, which is not the primary focus of the GDPR example."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "What does the \"open book\" correspond to in the RAG framework?",
+          "options": [
+            {
+              "text": "the document database",
+              "correct": true,
+              "explanation": "In RAG, the \"open book\" metaphor refers to the document database that the model can access to retrieve relevant information to solve tasks, just as a student would consult an open book in an exam."
+            },
+            {
+              "text": "the parameters of the LLM",
+              "correct": false,
+              "explanation": "The parameters of the LLM are not the \"open book\"; they represent the model's internal knowledge, which is opaque."
+            },
+            {
+              "text": "the prompt given to the LLM",
+              "correct": false,
+              "explanation": "The prompt given to the LLM is not the \"open book\"; it is a set of instructions that guides the model's behaviour, but it is not the source of external information that the model accesses."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "Which problem does the lecturer not mention as being addressed by grounding?",
+          "options": [
+            {
+              "text": "staleness",
+              "correct": true,
+              "explanation": "Grounding can help mitigate staleness by allowing the model to access up-to-date information from external sources, but the lecturer does not explicitly mention staleness as a problem addressed by grounding."
+            },
+            {
+              "text": "hallucination",
+              "correct": false,
+              "explanation": "Grounding can help reduce hallucination by providing the model with access to factual information, which can improve the accuracy of its responses."
+            },
+            {
+              "text": "attribution",
+              "correct": false,
+              "explanation": "Attribution concerns the ability to trace the source of information, which is not explicitly addressed by grounding in the lecture."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "Which of the following is mentioned as an advantage of dense retrieval?",
+          "options": [
+            {
+              "text": "It is possible to retrieve text that is semantically similar.",
+              "correct": true,
+              "explanation": "Dense retrieval uses continuous vector representations of text, allowing it to retrieve semantically similar text even if the exact keywords do not match."
+            },
+            {
+              "text": "It has a smaller compute footprint than sparse retrieval.",
+              "correct": false,
+              "explanation": "Dense retrieval typically has a larger compute footprint than sparse retrieval due to the need for computing and comparing dense vector representations."
+            },
+            {
+              "text": "It plays along well with word embeddings.",
+              "correct": false,
+              "explanation": "Dense retrieval relies on dense vector representations, which are not the same as traditional word embeddings used in sparse retrieval. Dense retrieval often uses more complex representations that capture semantic meaning beyond individual word embeddings."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "4.5",
+      "questions": [
+        {
+          "number": 1,
+          "question": "What is meant by canonical tokenisation in this work?",
+          "options": [
+            {
+              "text": "The tokenisation produced by the tokeniser the model was trained with",
+              "correct": true,
+              "explanation": "The canonical tokenisation is explicitly defined as the output of the BPE canonical tokenizer that iteratively applies merge rules until fixpoint - i.e., the unique tokenisation produced by the trained tokeniser."
+            },
+            {
+              "text": "The tokenisation that yields the highest model probability",
+              "correct": false,
+              "explanation": "The canonical tokenisation is defined as the one produced by applying BPE merge rules to fixpoint; it happens to usually be the shortest, not necessarily the highest-probability one."
+            },
+            {
+              "text": "The tokenisation with the smallest number of tokens",
+              "correct": false,
+              "explanation": "The paper notes canonical is usually the shortest, but that is a consequence of BPE, not the definition."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "What trend do the quiz-based experiments reveal about tokenisation distance and model accuracy?",
+          "options": [
+            {
+              "text": "Accuracy generally decreases as tokenisation distance increases",
+              "correct": true,
+              "explanation": "The experiments show a clear decreasing trend in accuracy across all three difficulty levels and all three models as normalised distance from the canonical tokenisation increases."
+            },
+            {
+              "text": "Accuracy remains constant regardless of tokenisation",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "Accuracy improves as tokenisation distance increases",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Why does adversarial tokenisation pose a challenge for aligned language models?",
+          "options": [
+            {
+              "text": "Alignment training primarily covers canonical tokenisations",
+              "correct": true,
+              "explanation": "The authors note that the safety distribution shift is centered around the canonical tokenization, so non-canonical tokenisations can access parts of the distribution not covered by alignment training."
+            },
+            {
+              "text": "Alignment training applies equally to all possible tokenisations",
+              "correct": false,
+              "explanation": "This is the opposite of what the paper argues."
+            },
+            {
+              "text": "Non-canonical tokenizations are excluded during pre-training",
+              "correct": false,
+              "explanation": "The paper's whole point is that semantic understanding of non-canonical tokenisations is acquired during pre-training (via \"semantic leakage\"), but alignment post-training fails to cover them."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "Why do the authors use greedy local search to find adversarial tokenisations?",
+          "options": [
+            {
+              "text": "Because the optimal tokenisation problem is computationally intractable",
+              "correct": true,
+              "explanation": "The authors show that the conditional most-likely-tokenisation problem is NP-complete, which directly motivates the greedy approximation as a practical substitute."
+            },
+            {
+              "text": "Because random sampling cannot produce valid tokenisations",
+              "correct": false,
+              "explanation": "The paper uses random sampling in several experiments; it is perfectly capable of producing valid tokenisations."
+            },
+            {
+              "text": "Because greedy search is guaranteed to find an optimal tokenisation",
+              "correct": false,
+              "explanation": "The paper explicitly describes the greedy local search algorithm as an approximation that finds a local optimum, not a global one."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "How do the authors explain the apparent contradiction that models understand non-canonical tokenisations semantically but not at the alignment level?",
+          "options": [
+            {
+              "text": "Semantic understanding and alignment are learned entirely during post-training",
+              "correct": false,
+              "explanation": "The paper says semantic understanding comes from pre-training, not post-training."
+            },
+            {
+              "text": "Alignment signals override all semantic representations learned during pre-training",
+              "correct": false,
+              "explanation": "The whole point is that alignment signals do not fully override pre-training - they are too limited in scope to do so."
+            },
+            {
+              "text": "Pre-training introduces semantic leakage through diverse data, while alignment data is smaller and cleaner",
+              "correct": true,
+              "explanation": "The paper explicitly resolves the contradiction by noting that massive-scale pre-training causes semantics to \"leak\" onto many tokenisations, whereas post-training safety fine-tuning uses comparatively little data and thus cannot cover the full tokenisation space."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "4.6",
+      "questions": [
+        {
+          "number": 1,
+          "question": "What is the main difference between \"traditional\" and the new LLM-based chatbots?",
+          "options": [
+            {
+              "text": "Traditional chatbots were more restricted in their affordances than LLM-based chatbots",
+              "correct": true,
+              "explanation": "Traditional chatbots were typically designed for specific tasks and had limited capabilities, while LLM-based chatbots can handle a much wider range of topics and tasks due to their large-scale training on diverse datasets."
+            },
+            {
+              "text": "Traditional chatbots were trained on considerably less data than LLM-based chatbots",
+              "correct": false,
+              "explanation": "Traditional chatbots were often trained on much smaller datasets, but the difference in data size is not the main distinction between traditional and LLM-based chatbots."
+            },
+            {
+              "text": "Traditional chatbots were not as transparent to users than LLM-based chatbots",
+              "correct": false,
+              "explanation": "Transparency can vary widely among both traditional and LLM-based chatbots, and it is not a defining characteristic that distinguishes the two."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Why does Bender refer to LLMs as \"stochastic parrots\"?",
+          "options": [
+            {
+              "text": "They randomly recombine linguistic forms, without any reference to meaning",
+              "correct": true,
+              "explanation": "LLMs generate text by predicting the next token based on patterns in the training data, without any understanding of meaning or reference to the real world."
+            },
+            {
+              "text": "They model the generation of natural language as a stochastic process",
+              "correct": false,
+              "explanation": "While LLMs do model language generation as a stochastic process, this is not the reason for the \"stochastic parrots\" label; the term emphasises the lack of true understanding and meaning in their outputs."
+            },
+            {
+              "text": "They are able to generate meaningful text about any topic in sheer endless variation",
+              "correct": false,
+              "explanation": "LLMs can generate text on a wide range of topics, but their outputs are not necessarily meaningful or accurate, and they do not have true understanding or creativity."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "What is Bender's stance on the following statement? \"ChatGPT et al. seem to understand language.\"",
+          "options": [
+            {
+              "text": "They do not; this is only how we perceive them. We cannot help but imagine a mind behind the text.",
+              "correct": true,
+              "explanation": "Bender argues that the apparent understanding of language by LLMs is an illusion created by their ability to generate coherent text, and that we tend to anthropomorphise these models, attributing them with understanding that they do not actually possess."
+            },
+            {
+              "text": "They do not yet, but there is a good chance they will if we scale things (data, model size) up even further.",
+              "correct": false,
+              "explanation": "Bender is sceptical about the idea that simply scaling up models will lead to true understanding, as she believes that the fundamental limitations of LLMs are not just a matter of scale but are inherent to their design and training objectives."
+            },
+            {
+              "text": "They do so because the current generation of these models is not only trained on text but also on human feedback.",
+              "correct": false,
+              "explanation": "While human feedback can improve the performance of LLMs, Bender's critique focuses on the fundamental nature of these models as pattern recognisers rather than true understanders of language, regardless of the training methods used."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "According to Bender, why are chatbots not a good replacement for search?",
+          "options": [
+            {
+              "text": "Users get tricked into believing that there is \"the answer\" and cut off from thinking on their own.",
+              "correct": true,
+              "explanation": "Bender argues that chatbots can create a false sense of certainty, leading users to accept generated answers without critical evaluation, which can hinder independent thinking and the pursuit of further information."
+            },
+            {
+              "text": "LLM-based chatbots require considerably more energy than traditional search engines.",
+              "correct": false,
+              "explanation": "While energy consumption is a concern with LLMs, Bender's critique of chatbots as replacements for search focuses more on the epistemological and cognitive implications rather than the environmental impact."
+            },
+            {
+              "text": "Users can never be sure whether the answer generated by the chatbot is correct.",
+              "correct": false,
+              "explanation": "While chatbots may generate plausible-sounding answers, users often cannot verify their accuracy because chatbots do not provide sources or citations for their claims. This lack of verifiability is a key concern in Bender's critique."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "What does the term \"information provenance\" refer to?",
+          "options": [
+            {
+              "text": "tracking the origin and history of information",
+              "correct": true,
+              "explanation": "Information provenance refers to the tracking of where information comes from and how it has been processed or transformed over time."
+            },
+            {
+              "text": "encrypting and securing information",
+              "correct": false,
+              "explanation": "While encryption is important for information security, it is not what is meant by information provenance."
+            },
+            {
+              "text": "studying how information influences public opinion",
+              "correct": false,
+              "explanation": "While the influence of information on public opinion is an important area of study, it is not what is meant by information provenance, which focuses on the origin and history of information rather than its effects on society."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    }
+  ]
+}

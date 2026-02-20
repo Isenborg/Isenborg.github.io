@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎯 Quiz Practice</title>
+<style>
+:root {
+  --primary: #7c4dff; --primary-dark: #651fff; --primary-light: #b388ff;
+  --success: #00e676; --success-dark: #00c853; --error: #ff5252; --error-dark: #d50000;
+  --bg: #f0f2f5; --bg-card: #ffffff; --bg-card-alt: #f8f9ff;
+  --text: #1a1d2e; --text-dim: #5c6370; --border: #e1e4e8;
+  --radius: 12px; --shadow: 0 4px 20px rgba(0,0,0,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:20px}
+#app{width:100%;max-width:720px;margin:0 auto}
+.screen{display:none;animation:fadeUp .4s ease}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes confettiFall{0%{transform:translateY(-100vh) rotate(0)}100%{transform:translateY(100vh) rotate(720deg)}}
+.shake{animation:shake .4s ease}
+.pulse{animation:pulse .3s ease}
+
+/* ── Start Screen ── */
+.hero{text-align:center;margin-bottom:32px}
+.hero h1{font-size:2.4rem;background:linear-gradient(135deg,var(--primary-light),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.hero p{color:var(--text-dim);font-size:1.05rem}
+.card{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card h2{font-size:1.15rem;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.unit-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.unit-check{display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 12px;border-radius:var(--radius);cursor:pointer;transition:all .25s ease;border:2px solid var(--border);background:var(--bg-card);position:relative}
+.unit-check:hover{background:var(--bg-card-alt);border-color:var(--primary);transform:translateY(-2px);box-shadow:var(--shadow)}
+.unit-check:hover .unit-check-check{opacity:.5}
+.unit-check input{position:absolute;opacity:0;pointer-events:none}
+.unit-check-check{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s}
+.unit-check.checked{background:linear-gradient(135deg,rgba(124,77,255,.12),rgba(124,77,255,.06));border-color:var(--primary);box-shadow:0 0 0 1px rgba(124,77,255,.2)}
+.unit-check.checked .unit-check-check{background:var(--primary);border-color:var(--primary);color:#fff;opacity:1}
+.unit-check .name{font-weight:600;font-size:.95rem;text-align:center}
+.unit-check .count{color:var(--text-dim);font-size:.75rem;text-align:center}
+.count-control{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.count-control .count-btns{display:flex;align-items:center;gap:4px}
+.count-control .count-btns button{width:40px;height:40px;border-radius:10px;border:2px solid var(--border);background:var(--bg-card);color:var(--text);font-size:1.2rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.count-control .count-btns button:hover{background:var(--bg-card-alt);border-color:var(--primary);color:var(--primary);transform:scale(1.05)}
+.count-control .count-btns button:active{transform:scale(.95)}
+.count-control input[type=number]{width:56px;background:var(--bg);border:2px solid var(--border);color:var(--text);padding:8px;border-radius:10px;font-size:1.1rem;font-weight:600;text-align:center}
+.count-control input[type=number]:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(124,77,255,.15)}
+.count-control input[type=range]{flex:1;min-width:100px;accent-color:var(--primary)}
+.count-presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.count-preset{padding:8px 16px;border-radius:12px;border:2px solid var(--border);background:var(--bg-card);color:var(--text-dim);font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+.count-preset:hover{background:var(--bg-card-alt);border-color:var(--primary);color:var(--primary)}
+.count-preset.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.avail{color:var(--text-dim);font-size:.85rem;margin-top:8px}
+.btn{padding:14px 32px;border:none;border-radius:var(--radius);font-size:1.05rem;font-weight:600;cursor:pointer;transition:.25s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;width:100%}
+.btn-primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 24px rgba(124,77,255,.4)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-secondary{background:var(--bg-card-alt);color:var(--text);border:2px solid var(--border)}
+.btn-secondary:hover{border-color:var(--primary);background:rgba(124,77,255,.08);transform:translateY(-2px)}
+.btn-sm{padding:8px 16px;font-size:.9rem;border-radius:8px}
+
+/* ── Quiz Screen ── */
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:.9rem;color:var(--text-dim)}
+.stat{display:flex;align-items:center;gap:4px;font-weight:600}
+.stat.score{color:var(--primary)}
+.stat.streak{color:#ff9100}
+.progress-bar{width:100%;height:10px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px;box-shadow:inset 0 1px 2px rgba(0,0,0,.06)}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-light));border-radius:8px;transition:width .4s ease}
+.q-label{color:var(--text-dim);font-size:.85rem;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
+.q-text{font-size:1.2rem;font-weight:600;line-height:1.5;margin-bottom:20px}
+.img-btn{background:rgba(124,77,255,.15);color:var(--primary-light);border:1px solid rgba(124,77,255,.3);padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.85rem;display:inline-flex;align-items:center;gap:6px;transition:.2s;margin-bottom:16px}
+.img-btn:hover{background:rgba(124,77,255,.25)}
+.options{display:grid;gap:10px;margin-bottom:20px}
+.option{background:var(--bg-card-alt);border:2px solid var(--border);border-radius:var(--radius);padding:14px 18px;cursor:pointer;transition:all .25s;font-size:1rem;text-align:left;color:var(--text);line-height:1.4;display:flex;align-items:flex-start;gap:10px}
+.option:hover:not(.disabled){border-color:var(--primary);background:rgba(124,77,255,.08);transform:translateX(4px)}
+.option .marker{min-width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;transition:.25s;flex-shrink:0;margin-top:1px}
+.option:hover:not(.disabled) .marker{border-color:var(--primary)}
+.option.correct{border-color:var(--success);background:rgba(0,230,118,.08)}
+.option.correct .marker{border-color:var(--success);background:var(--success);color:#000}
+.option.wrong{border-color:var(--error);background:rgba(255,82,82,.08)}
+.option.wrong .marker{border-color:var(--error);background:var(--error);color:#fff}
+.option.disabled{cursor:default;opacity:.85}
+.option.disabled:hover{border-color:var(--border);background:var(--bg-card-alt);transform:none}
+.option.correct.disabled:hover{border-color:var(--success);background:rgba(0,230,118,.08)}
+.option.wrong.disabled:hover{border-color:var(--error);background:rgba(255,82,82,.08)}
+.explanation-box{border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;animation:fadeUp .3s ease;line-height:1.5;font-size:.95rem}
+.explanation-box.correct{background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.25)}
+.explanation-box.wrong{background:rgba(255,82,82,.08);border:1px solid rgba(255,82,82,.25)}
+.explanation-box .exp-header{font-weight:700;margin-bottom:6px;font-size:1rem}
+.next-btn-wrap{text-align:center}
+
+/* ── Results Screen ── */
+.results-header{text-align:center;padding:30px 0}
+.results-header .trophy{font-size:4rem;margin-bottom:12px}
+.results-header h2{font-size:1.8rem;margin-bottom:8px}
+.stars{font-size:2rem;margin:12px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--bg-card-alt);border:2px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;transition:all .2s}
+.stat-card:hover{border-color:var(--primary);box-shadow:var(--shadow)}
+.stat-card .val{font-size:1.6rem;font-weight:700;color:var(--primary)}
+.stat-card .lbl{font-size:.8rem;color:var(--text-dim);margin-top:4px}
+.review-list{display:grid;gap:10px;margin-bottom:24px}
+.review-item{background:var(--bg-card-alt);border:2px solid var(--border);border-radius:var(--radius);padding:14px 16px;cursor:pointer;transition:all .2s}
+.review-item:hover{border-color:var(--primary);background:var(--bg-card);box-shadow:var(--shadow)}
+.review-item .ri-head{display:flex;align-items:center;gap:10px;font-size:.95rem}
+.review-item .ri-icon{font-size:1.1rem}
+.review-item .ri-q{flex:1;word-wrap:break-word;overflow-wrap:break-word;min-width:0}
+.review-item .ri-detail{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:.9rem;color:var(--text-dim);line-height:1.5;display:none}
+.review-item.open .ri-detail{display:block}
+.btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* ── Image Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;justify-content:center;align-items:center;z-index:1000;padding:20px}
+.modal-overlay.active{display:flex}
+.modal-content{position:relative;max-width:90vw;max-height:90vh;display:flex;flex-direction:column;align-items:center;gap:12px}
+.modal-content img{max-width:100%;max-height:80vh;border-radius:8px;object-fit:contain}
+.modal-close{position:fixed;top:16px;right:20px;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:1.6rem;width:40px;height:40px;border-radius:50%;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:rgba(255,255,255,.3)}
+.modal-nav{display:flex;gap:12px;align-items:center}
+.modal-nav button{background:rgba(255,255,255,.12);border:none;color:#fff;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:.9rem}
+.modal-nav button:hover{background:rgba(255,255,255,.22)}
+.modal-counter{color:rgba(255,255,255,.7);font-size:.85rem}
+
+/* ── Confetti ── */
+.confetti-container{position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden}
+.confetti{position:absolute;width:10px;height:10px;top:-20px;animation:confettiFall linear forwards}
+
+@media(max-width:600px){
+  body{padding:10px}
+  .hero h1{font-size:1.8rem}
+  .q-text{font-size:1.05rem}
+  .stats-grid{grid-template-columns:1fr}
+  .btn{padding:12px 20px;font-size:.95rem}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ════ START SCREEN ════ -->
+  <div id="start-screen" class="screen active">
+    <div class="hero">
+      <h1>🎯 Quiz Practice</h1>
+      <p>Pick your units and start practicing!</p>
+    </div>
+
+    <div class="card" id="units-card" style="display:none">
+      <h2>📚 Select Units</h2>
+      <div class="unit-checks" id="unit-checks"></div>
+    </div>
+
+    <div class="card" id="count-card" style="display:none">
+      <h2>🔢 Number of Questions</h2>
+      <div class="count-control">
+        <div class="count-btns">
+          <button type="button" id="q-minus" aria-label="Decrease">−</button>
+          <input type="number" id="q-num" min="1" max="10" value="10">
+          <button type="button" id="q-plus" aria-label="Increase">+</button>
+        </div>
+        <input type="range" id="q-range" min="1" max="10" value="10">
+      </div>
+      <div class="count-presets" id="count-presets"></div>
+      <div class="avail" id="avail-text">0 questions available</div>
+    </div>
+
+    <div id="start-btn-wrap" style="display:none">
+      <button class="btn btn-primary" id="start-btn" disabled>🚀 Start Quiz</button>
+    </div>
+  </div>
+
+  <!-- ════ QUIZ SCREEN ════ -->
+  <div id="quiz-screen" class="screen">
+    <div class="quiz-header">
+      <span id="q-counter">Q 1/10</span>
+      <span class="stat score" id="score-display">⭐ 0</span>
+      <span class="stat streak" id="streak-display">🔥 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+    <div class="card" id="question-card">
+      <div class="q-label">
+        <span id="q-source"></span>
+        <span id="q-ref-badge" style="display:none;color:var(--primary-light);font-size:.8rem">🔗 References previous</span>
+      </div>
+      <div class="q-text" id="q-text"></div>
+      <div id="img-btn-area"></div>
+      <div class="options" id="options-area"></div>
+      <div id="explanation-area"></div>
+      <div class="next-btn-wrap" id="next-btn-wrap" style="display:none">
+        <button class="btn btn-primary" id="next-btn">Next Question →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ RESULTS SCREEN ════ -->
+  <div id="results-screen" class="screen">
+    <div class="card">
+      <div class="results-header">
+        <div class="trophy" id="trophy">🏆</div>
+        <h2>Quiz Complete!</h2>
+        <div class="stars" id="stars"></div>
+        <p id="result-msg" style="color:var(--text-dim)"></p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="val" id="r-score">0</div><div class="lbl">Points</div></div>
+        <div class="stat-card"><div class="val" id="r-correct">0/0</div><div class="lbl">Correct</div></div>
+        <div class="stat-card"><div class="val" id="r-streak">0</div><div class="lbl">Best Streak 🔥</div></div>
+      </div>
+
+      <h2 style="margin-bottom:12px;font-size:1.1rem">📝 Review Answers</h2>
+      <div class="review-list" id="review-list"></div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" style="width:auto" id="retry-btn">🔄 Try Again</button>
+        <button class="btn btn-secondary" id="home-btn">🏠 Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ IMAGE MODAL ════ -->
+<div class="modal-overlay" id="image-modal">
+  <button class="modal-close" id="modal-close">✕</button>
+  <div class="modal-content">
+    <img id="modal-img" src="" alt="Question image">
+    <div class="modal-nav" id="modal-nav" style="display:none">
+      <button id="modal-prev">← Prev</button>
+      <span class="modal-counter" id="modal-counter"></span>
+      <button id="modal-next">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ CONFETTI CONTAINER ════ -->
+<div class="confetti-container" id="confetti-container"></div>
+
+<script>
+/* ══════════════════════════════════════
+   DATA & STATE
+   ══════════════════════════════════════ */
+let allUnits = [];   // [{unit, lectures:[{id, questions:[...]}]}]
+let quizQuestions = [];
+let currentIdx = 0;
+let score = 0;
+let streak = 0;
+let maxStreak = 0;
+let answers = [];    // [{question, selectedIdx, correct}]
+let modalImages = [];
+let modalIdx = 0;
+
+/* ══════════════════════════════════════
+   LOAD UNITS
+   ══════════════════════════════════════ */
+const UNIT_FILES = ['unit1.json', 'unit2.json', 'unit3.json', 'unit4.json'];
+async function loadBuiltInUnits() {
+  const results = await Promise.all(
+    UNIT_FILES.map(name =>
+      fetch(name)
+        .then(r => r.ok ? r.json() : null)
+        .then(data => data ? { name, data } : null)
+        .catch(() => null)
+    )
+  );
+  results.filter(Boolean).forEach(({ data }) => {
+    const existingIdx = allUnits.findIndex(u => u.unit === data.unit);
+    if (existingIdx >= 0) allUnits[existingIdx] = data;
+    else allUnits.push(data);
+  });
+  if (allUnits.length) buildStartUI();
+}
+loadBuiltInUnits();
+
+/* ══════════════════════════════════════
+   START SCREEN UI
+   ══════════════════════════════════════ */
+function buildStartUI() {
+  const unitsCard = document.getElementById('units-card');
+  const countCard = document.getElementById('count-card');
+  const startWrap = document.getElementById('start-btn-wrap');
+  unitsCard.style.display = ''; countCard.style.display = ''; startWrap.style.display = '';
+
+  const checksContainer = document.getElementById('unit-checks');
+  checksContainer.innerHTML = '';
+
+  allUnits.forEach((u, i) => {
+    const totalQ = u.lectures.reduce((s, l) => s + l.questions.length, 0);
+    const label = document.createElement('label');
+    label.className = 'unit-check checked';
+    label.innerHTML = `
+      <input type="checkbox" checked data-idx="${i}">
+      <span class="unit-check-check">✓</span>
+      <div class="info">
+        <div class="name">${u.unit}</div>
+        <div class="count">${totalQ} question${totalQ !== 1 ? 's' : ''} · ${u.lectures.length} lecture${u.lectures.length !== 1 ? 's' : ''}</div>
+      </div>`;
+    checksContainer.appendChild(label);
+    const cb = label.querySelector('input');
+    cb.addEventListener('change', () => {
+      label.classList.toggle('checked', cb.checked);
+      updateAvailable();
+    });
+  });
+  buildCountPresets();
+  updateAvailable();
+}
+
+function buildCountPresets() {
+  const container = document.getElementById('count-presets');
+  const range = document.getElementById('q-range');
+  const num = document.getElementById('q-num');
+  container.innerHTML = '';
+  [5, 10, 15, 20, 'All'].forEach(n => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'count-preset';
+    btn.textContent = n === 'All' ? 'All' : n.toString();
+    btn.dataset.val = n === 'All' ? '' : n.toString();
+    btn.addEventListener('click', () => {
+      const max = parseInt(range.max) || 1;
+      const v = n === 'All' ? max : Math.min(n, max);
+      num.value = v;
+      range.value = v;
+      container.querySelectorAll('.count-preset').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateAvailable();
+    });
+    container.appendChild(btn);
+  });
+}
+
+function getSelectedQuestions() {
+  const checks = document.querySelectorAll('#unit-checks input[type=checkbox]');
+  let pool = [];
+  checks.forEach(ch => {
+    if (ch.checked) {
+      const u = allUnits[parseInt(ch.dataset.idx)];
+      u.lectures.forEach(lec => {
+        lec.questions.forEach((q, qi) => {
+          pool.push({
+            ...q,
+            _lectureId: lec.id,
+            _unit: u.unit,
+            _indexInLecture: qi,
+            _prevQuestion: qi > 0 ? { ...lec.questions[qi - 1], _lectureId: lec.id, _unit: u.unit, _indexInLecture: qi - 1 } : null
+          });
+        });
+      });
+    }
+  });
+  return pool;
+}
+
+function updateAvailable() {
+  const pool = getSelectedQuestions();
+  const max = pool.length;
+  const range = document.getElementById('q-range');
+  const num = document.getElementById('q-num');
+  const avail = document.getElementById('avail-text');
+  const startBtn = document.getElementById('start-btn');
+
+  range.max = max; num.max = max;
+  if (parseInt(range.value) > max) { range.value = max; num.value = max; }
+  if (max === 0) { range.value = 0; num.value = 0; }
+  else if (parseInt(range.value) < 1) { range.value = Math.min(10, max); num.value = Math.min(10, max); }
+
+  avail.textContent = `${max} question${max !== 1 ? 's' : ''} available`;
+  startBtn.disabled = max === 0;
+
+  // Sync preset active state
+  const val = parseInt(num.value) || 0;
+  const rangeMax = parseInt(range.max) || 0;
+  document.querySelectorAll('.count-preset').forEach(b => {
+    const isAll = b.textContent === 'All';
+    b.classList.toggle('active', isAll ? val === rangeMax && rangeMax > 0 : parseInt(b.textContent) === val);
+  });
+}
+
+const qRange = document.getElementById('q-range');
+const qNum = document.getElementById('q-num');
+qRange.addEventListener('input', () => { qNum.value = qRange.value; updateAvailable(); });
+qNum.addEventListener('input', () => {
+  let v = parseInt(qNum.value) || 0;
+  v = Math.max(1, Math.min(v, parseInt(qRange.max)));
+  qNum.value = v; qRange.value = v;
+  updateAvailable();
+});
+document.getElementById('q-minus').addEventListener('click', () => {
+  let v = parseInt(qNum.value) || 1;
+  if (v > 1) { v--; qNum.value = v; qRange.value = v; updateAvailable(); }
+});
+document.getElementById('q-plus').addEventListener('click', () => {
+  let v = parseInt(qNum.value) || 1;
+  const max = parseInt(qRange.max) || 1;
+  if (v < max) { v++; qNum.value = v; qRange.value = v; updateAvailable(); }
+});
+
+/* ══════════════════════════════════════
+   QUIZ GENERATION — with dependency handling
+   ══════════════════════════════════════ */
+function buildQuiz() {
+  const pool = getSelectedQuestions();
+  const count = parseInt(qNum.value) || 1;
+
+  // Separate independent and dependent questions
+  const independent = pool.filter(q => !q.references_previous_question);
+  const dependent = pool.filter(q => q.references_previous_question);
+
+  // Build a map: for each dependent question, know which question it depends on
+  // A dependent question depends on the previous question in the same lecture
+  const depMap = new Map(); // key: dependent q identifier -> value: the prerequisite question
+  dependent.forEach(dq => {
+    if (dq._prevQuestion) {
+      depMap.set(`${dq._unit}|${dq._lectureId}|${dq.number}`, dq._prevQuestion);
+    }
+  });
+
+  let selected = [];
+  let usedKeys = new Set();
+
+  function qKey(q) {
+    return `${q._unit}|${q._lectureId}|${q.number}`;
+  }
+
+  // Shuffle helper
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // Start by picking from shuffled independent questions
+  let shuffledInd = shuffle(independent);
+  let shuffledDep = shuffle(dependent);
+
+  // We'll build the quiz step by step
+  let attempts = 0;
+  const maxAttempts = count * 20;
+
+  while (selected.length < count && attempts < maxAttempts) {
+    attempts++;
+
+    // Try to add a dependent question if its prerequisite is already in selected
+    let addedDep = false;
+    for (let i = 0; i < shuffledDep.length; i++) {
+      const dq = shuffledDep[i];
+      const dk = qKey(dq);
+      if (usedKeys.has(dk)) continue;
+
+      // Check if prerequisite is in selected
+      const prereq = depMap.get(dk);
+      if (prereq && usedKeys.has(qKey(prereq))) {
+        selected.push(dq);
+        usedKeys.add(dk);
+        shuffledDep.splice(i, 1);
+        addedDep = true;
+        break;
+      }
+    }
+
+    if (addedDep) continue;
+
+    // Otherwise, pick from independent pool (or add a prerequisite for a dependent)
+    // With some probability, try to add a prerequisite + dependent pair
+    if (shuffledDep.length > 0 && selected.length + 2 <= count && Math.random() < 0.4) {
+      // Try to find a dependent question whose prereq is independent and not yet added
+      for (let i = 0; i < shuffledDep.length; i++) {
+        const dq = shuffledDep[i];
+        const dk = qKey(dq);
+        if (usedKeys.has(dk)) continue;
+        const prereq = depMap.get(dk);
+        if (prereq && !usedKeys.has(qKey(prereq))) {
+          // Check if prereq is in the independent pool
+          const prereqInInd = shuffledInd.findIndex(q => qKey(q) === qKey(prereq));
+          if (prereqInInd >= 0) {
+            selected.push(shuffledInd[prereqInInd]);
+            usedKeys.add(qKey(prereq));
+            shuffledInd.splice(prereqInInd, 1);
+            // Don't add dependent yet — it will be added in next iteration
+            break;
+          }
+        }
+      }
+      // If we didn't add anything, fall through to add an independent
+      if (selected.length < count) {
+        // If nothing was added in this branch, add an independent
+        if (shuffledInd.length > 0) {
+          const q = shuffledInd.shift();
+          if (!usedKeys.has(qKey(q))) {
+            selected.push(q);
+            usedKeys.add(qKey(q));
+          }
+        } else break;
+      }
+    } else {
+      // Pick a random independent question
+      if (shuffledInd.length > 0) {
+        const q = shuffledInd.shift();
+        if (!usedKeys.has(qKey(q))) {
+          selected.push(q);
+          usedKeys.add(qKey(q));
+        }
+      } else {
+        // No more independent, try to force-add dependent pairs
+        if (shuffledDep.length === 0) break;
+        const dq = shuffledDep[0];
+        const dk = qKey(dq);
+        if (usedKeys.has(dk)) { shuffledDep.shift(); continue; }
+        const prereq = depMap.get(dk);
+        if (prereq && !usedKeys.has(qKey(prereq))) {
+          if (selected.length + 2 <= count) {
+            selected.push(prereq);
+            usedKeys.add(qKey(prereq));
+          } else break;
+        }
+        selected.push(dq);
+        usedKeys.add(dk);
+        shuffledDep.shift();
+      }
+    }
+  }
+
+  // Now reorder: ensure every dependent question comes after its prerequisite
+  let ordered = [];
+  let placed = new Set();
+
+  // First pass: place independent questions and prerequisites, then their dependents right after
+  function placeWithDeps(q) {
+    const k = qKey(q);
+    if (placed.has(k)) return;
+    // If this question is dependent, place its prereq first
+    if (q.references_previous_question && q._prevQuestion) {
+      const pk = qKey(q._prevQuestion);
+      if (!placed.has(pk)) {
+        const prereqInSelected = selected.find(sq => qKey(sq) === pk);
+        if (prereqInSelected) {
+          placeWithDeps(prereqInSelected);
+        }
+      }
+    }
+    if (!placed.has(k)) {
+      ordered.push(q);
+      placed.add(k);
+    }
+  }
+
+  selected.forEach(q => placeWithDeps(q));
+
+  // Shuffle while maintaining dependency order
+  // We'll do a topological-aware shuffle
+  let finalOrder = [];
+  let remaining = [...ordered];
+  let placedFinal = new Set();
+
+  while (remaining.length > 0) {
+    // Collect all questions whose dependencies are met
+    let ready = remaining.filter(q => {
+      if (q.references_previous_question && q._prevQuestion) {
+        return placedFinal.has(qKey(q._prevQuestion));
+      }
+      return true;
+    });
+
+    if (ready.length === 0) {
+      // Shouldn't happen, but break to avoid infinite loop
+      finalOrder.push(...remaining);
+      break;
+    }
+
+    // Pick a random one from ready
+    const pick = ready[Math.floor(Math.random() * ready.length)];
+    finalOrder.push(pick);
+    placedFinal.add(qKey(pick));
+    remaining = remaining.filter(q => qKey(q) !== qKey(pick));
+  }
+
+  return finalOrder.slice(0, count);
+}
+
+/* ══════════════════════════════════════
+   START QUIZ
+   ══════════════════════════════════════ */
+document.getElementById('start-btn').addEventListener('click', () => {
+  quizQuestions = buildQuiz();
+  if (quizQuestions.length === 0) return;
+  currentIdx = 0; score = 0; streak = 0; maxStreak = 0; answers = [];
+  showScreen('quiz-screen');
+  renderQuestion();
+});
+
+/* ══════════════════════════════════════
+   SCREEN MANAGEMENT
+   ══════════════════════════════════════ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ══════════════════════════════════════
+   RENDER QUESTION
+   ══════════════════════════════════════ */
+function renderQuestion() {
+  const q = quizQuestions[currentIdx];
+  const total = quizQuestions.length;
+
+  document.getElementById('q-counter').textContent = `Q ${currentIdx + 1}/${total}`;
+  document.getElementById('score-display').textContent = `⭐ ${score}`;
+  document.getElementById('streak-display').textContent = `🔥 ${streak}`;
+  document.getElementById('progress-fill').style.width = `${((currentIdx) / total) * 100}%`;
+
+  document.getElementById('q-source').textContent = `${q._unit} · Lecture ${q._lectureId}`;
+  document.getElementById('q-ref-badge').style.display = q.references_previous_question ? '' : 'none';
+  document.getElementById('q-text').textContent = q.question;
+
+  // Images
+  const imgArea = document.getElementById('img-btn-area');
+  imgArea.innerHTML = '';
+  if (q.images && q.images.length > 0) {
+    const btn = document.createElement('button');
+    btn.className = 'img-btn';
+    btn.innerHTML = `🖼️ View Image${q.images.length > 1 ? 's' : ''} (${q.images.length})`;
+    btn.addEventListener('click', () => openImageModal(q.images, 0));
+    imgArea.appendChild(btn);
+  }
+
+  // Options
+  const optArea = document.getElementById('options-area');
+  optArea.innerHTML = '';
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="marker">${letters[i]}</span><span>${opt.text}</span>`;
+    btn.addEventListener('click', () => handleAnswer(i, btn));
+    optArea.appendChild(btn);
+  });
+
+  // Clear explanation and next button
+  document.getElementById('explanation-area').innerHTML = '';
+  document.getElementById('next-btn-wrap').style.display = 'none';
+}
+
+/* ══════════════════════════════════════
+   HANDLE ANSWER
+   ══════════════════════════════════════ */
+function handleAnswer(selectedIdx, clickedBtn) {
+  const q = quizQuestions[currentIdx];
+  const correct = q.options[selectedIdx].correct;
+  const explanation = q.options[selectedIdx].explanation;
+  const correctIdx = q.options.findIndex(o => o.correct);
+
+  // Disable all options
+  const allBtns = document.querySelectorAll('#options-area .option');
+  allBtns.forEach((btn, i) => {
+    btn.classList.add('disabled');
+    btn.style.pointerEvents = 'none';
+    if (i === correctIdx) btn.classList.add('correct');
+  });
+
+  if (correct) {
+    clickedBtn.classList.add('correct');
+    clickedBtn.classList.add('pulse');
+    streak++;
+    if (streak > maxStreak) maxStreak = streak;
+    // Points: base 100 + streak bonus
+    const pts = 100 + (streak - 1) * 25;
+    score += pts;
+  } else {
+    clickedBtn.classList.add('wrong');
+    clickedBtn.classList.add('shake');
+    streak = 0;
+  }
+
+  document.getElementById('score-display').textContent = `⭐ ${score}`;
+  document.getElementById('streak-display').textContent = `🔥 ${streak}`;
+
+  // Show explanation
+  const expArea = document.getElementById('explanation-area');
+  const correctOption = q.options[correctIdx];
+  expArea.innerHTML = `
+    <div class="explanation-box ${correct ? 'correct' : 'wrong'}">
+      <div class="exp-header">${correct ? '✅ Correct!' : '❌ Incorrect'}</div>
+      <p>${correct ? explanation : explanation + (correctIdx !== selectedIdx ? '<br><br><strong>Correct answer:</strong> ' + correctOption.text + '<br>' + correctOption.explanation : '')}</p>
+    </div>
+  `;
+
+  // Record answer
+  answers.push({
+    question: q.question,
+    selectedIdx,
+    correct,
+    correctIdx,
+    explanation,
+    correctExplanation: correctOption.explanation,
+    correctText: correctOption.text,
+    selectedText: q.options[selectedIdx].text,
+    _unit: q._unit,
+    _lectureId: q._lectureId
+  });
+
+  // Show next button
+  const nextWrap = document.getElementById('next-btn-wrap');
+  nextWrap.style.display = '';
+  const nextBtn = document.getElementById('next-btn');
+  nextBtn.textContent = currentIdx + 1 >= quizQuestions.length ? '🏁 See Results' : 'Next Question →';
+}
+
+/* ══════════════════════════════════════
+   NEXT QUESTION
+   ══════════════════════════════════════ */
+document.getElementById('next-btn').addEventListener('click', () => {
+  currentIdx++;
+  if (currentIdx >= quizQuestions.length) {
+    showResults();
+  } else {
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
+
+/* ══════════════════════════════════════
+   RESULTS SCREEN
+   ══════════════════════════════════════ */
+function showResults() {
+  showScreen('results-screen');
+
+  const total = quizQuestions.length;
+  const correctCount = answers.filter(a => a.correct).length;
+  const pct = Math.round((correctCount / total) * 100);
+
+  document.getElementById('progress-fill').style.width = '100%';
+
+  // Stars based on percentage
+  let starCount = 0;
+  if (pct >= 90) starCount = 5;
+  else if (pct >= 75) starCount = 4;
+  else if (pct >= 60) starCount = 3;
+  else if (pct >= 40) starCount = 2;
+  else if (pct >= 20) starCount = 1;
+
+  document.getElementById('stars').textContent = '⭐'.repeat(starCount) + '☆'.repeat(5 - starCount);
+
+  // Trophy
+  const trophy = document.getElementById('trophy');
+  if (pct === 100) trophy.textContent = '👑';
+  else if (pct >= 75) trophy.textContent = '🏆';
+  else if (pct >= 50) trophy.textContent = '🥈';
+  else trophy.textContent = '💪';
+
+  // Message
+  const msgs = {
+    100: "Perfect score! You're a genius! 🎉",
+    75: "Great job! Almost there! 🚀",
+    50: "Good effort! Keep practicing! 📚",
+    25: "Don't give up! Review and try again! 💡",
+    0: "Rough start, but every expert was once a beginner! 🌱"
+  };
+  const msgKey = pct >= 100 ? 100 : pct >= 75 ? 75 : pct >= 50 ? 50 : pct >= 25 ? 25 : 0;
+  document.getElementById('result-msg').textContent = msgs[msgKey];
+
+  // Stats
+  document.getElementById('r-score').textContent = score;
+  document.getElementById('r-correct').textContent = `${correctCount}/${total}`;
+  document.getElementById('r-streak').textContent = maxStreak;
+
+  // Review list
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '';
+  answers.forEach((a, i) => {
+    const item = document.createElement('div');
+    item.className = 'review-item';
+    item.innerHTML = `
+      <div class="ri-head">
+        <span class="ri-icon">${a.correct ? '✅' : '❌'}</span>
+        <span class="ri-q">Q${i + 1}: ${a.question}</span>
+      </div>
+      <div class="ri-detail">
+        <p><strong>Your answer:</strong> ${a.selectedText}</p>
+        <p><strong>Correct answer:</strong> ${a.correctText}</p>
+        <p style="margin-top:8px">${a.correctExplanation}</p>
+      </div>
+    `;
+    item.addEventListener('click', () => item.classList.toggle('open'));
+    reviewList.appendChild(item);
+  });
+
+  // Confetti for good scores
+  if (pct >= 60) launchConfetti();
+}
+
+/* ══════════════════════════════════════
+   IMAGE MODAL
+   ══════════════════════════════════════ */
+const modal = document.getElementById('image-modal');
+const modalImg = document.getElementById('modal-img');
+const modalNav = document.getElementById('modal-nav');
+const modalCounter = document.getElementById('modal-counter');
+
+function openImageModal(images, idx) {
+  modalImages = images;
+  modalIdx = idx;
+  updateModalImage();
+  modal.classList.add('active');
+}
+
+function updateModalImage() {
+  modalImg.src = modalImages[modalIdx];
+  if (modalImages.length > 1) {
+    modalNav.style.display = 'flex';
+    modalCounter.textContent = `${modalIdx + 1} / ${modalImages.length}`;
+  } else {
+    modalNav.style.display = 'none';
+  }
+}
+
+document.getElementById('modal-close').addEventListener('click', () => modal.classList.remove('active'));
+modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('active'); });
+document.getElementById('modal-prev').addEventListener('click', () => {
+  modalIdx = (modalIdx - 1 + modalImages.length) % modalImages.length;
+  updateModalImage();
+});
+document.getElementById('modal-next').addEventListener('click', () => {
+  modalIdx = (modalIdx + 1) % modalImages.length;
+  updateModalImage();
+});
+document.addEventListener('keydown', e => {
+  if (!modal.classList.contains('active')) return;
+  if (e.key === 'Escape') modal.classList.remove('active');
+  if (e.key === 'ArrowLeft') { modalIdx = (modalIdx - 1 + modalImages.length) % modalImages.length; updateModalImage(); }
+  if (e.key === 'ArrowRight') { modalIdx = (modalIdx + 1) % modalImages.length; updateModalImage(); }
+});
+
+/* ══════════════════════════════════════
+   CONFETTI
+   ══════════════════════════════════════ */
+function launchConfetti() {
+  const container = document.getElementById('confetti-container');
+  container.innerHTML = '';
+  const colors = ['#7c4dff', '#b388ff', '#00e676', '#ff9100', '#ff5252', '#40c4ff', '#ffeb3b'];
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.width = (Math.random() * 8 + 6) + 'px';
+    el.style.height = (Math.random() * 8 + 6) + 'px';
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    el.style.animationDelay = (Math.random() * 1.5) + 's';
+    container.appendChild(el);
+  }
+  setTimeout(() => container.innerHTML = '', 5000);
+}
+
+/* ══════════════════════════════════════
+   NAVIGATION BUTTONS
+   ══════════════════════════════════════ */
+document.getElementById('retry-btn').addEventListener('click', () => {
+  quizQuestions = buildQuiz();
+  currentIdx = 0; score = 0; streak = 0; maxStreak = 0; answers = [];
+  showScreen('quiz-screen');
+  renderQuestion();
+});
+
+document.getElementById('home-btn').addEventListener('click', () => {
+  showScreen('start-screen');
+});
+
+/* ══════════════════════════════════════
+   KEYBOARD SHORTCUTS (optional)
+   ══════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-screen').classList.contains('active')) {
+    // Number keys 1-9 to select option
+    const num = parseInt(e.key);
+    if (num >= 1 && num <= 9) {
+      const opts = document.querySelectorAll('#options-area .option:not(.disabled)');
+      if (opts[num - 1]) opts[num - 1].click();
+    }
+    // Enter or Space to go next
+    if ((e.key === 'Enter' || e.key === ' ') && document.getElementById('next-btn-wrap').style.display !== 'none') {
+      e.preventDefault();
+      document.getElementById('next-btn').click();
+    }
+  }
+});
+</script>
+</body>
+</html>

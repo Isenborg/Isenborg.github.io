@@ -1,0 +1,725 @@
+{
+  "unit": "Unit 3",
+  "lectures": [
+    {
+      "id": "3.1",
+      "questions": [
+        {
+          "number": 1,
+          "question": "Which of the models mentioned in the slide on Decoder-based language models has the largest context length?",
+          "options": [
+            {
+              "text": "GPT",
+              "correct": false,
+              "explanation": "OpenAI's o3 model (release: 2025-01) has a context size of 200K tokens."
+            },
+            {
+              "text": "Gemini",
+              "correct": true,
+              "explanation": "Gemini 2.0 (release: 2025-01) has a context size of 1M tokens."
+            },
+            {
+              "text": "DeepSeek",
+              "correct": false,
+              "explanation": "DeepSeek R1 (release: 2025-01) has a context size of 128K tokens."
+            }
+          ],
+          "images": ["images/decoder-based.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "What are adapters not typically used for?",
+          "options": [
+            {
+              "text": "To adapt a pretrained language model to a new computing hardware.",
+              "correct": true,
+              "explanation": "Adapters are designed to fine-tune models for new tasks or languages without retraining the entire model, not for adapting to different hardware."
+            },
+            {
+              "text": "To adapt a pretrained language model to a new task.",
+              "correct": false,
+              "explanation": "Adapters are commonly used to fine-tune models for specific tasks efficiently."
+            },
+            {
+              "text": "To adapt a pretrained language model to a new language.",
+              "correct": false,
+              "explanation": "Adapters can be employed to extend a model's capabilities to additional languages."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "What speedup is quoted for the H200 architecture over the H100 architecture when it comes to inference with the Llama 2 70B model?",
+          "options": [
+            {
+              "text": "1.9",
+              "correct": true,
+              "explanation": "The H200 architecture offers a 1.9x speedup over the H100 for Llama 2 70B model inference."
+            },
+            {
+              "text": "1.6",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "1.4",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "What task is addressed in the SWE-bench benchmark?",
+          "options": [
+            {
+              "text": "resolving GitHub issues",
+              "correct": true,
+              "explanation": ""
+            },
+            {
+              "text": "strategic workflow extrapolation",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "answering factual questions about Sweden",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "Which were the three best-performing models on the Chatbot Arena leaderboard?",
+          "options": [
+            {
+              "text": "Gemini, ChatGPT, DeepSeek",
+              "correct": true,
+              "explanation": "(As of the date when the slides were produced.)"
+            },
+            {
+              "text": "ChatGPT, DeepSeek, Step-2",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "DeepSeek, Llama 3, o1",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": ["images/leaderboard.png"],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "3.2",
+      "questions": [
+        {
+          "number": 1,
+          "question": "How does Adam solve the zig-zagging problem?",
+          "options": [
+            {
+              "text": "It keeps averages of past gradient magnitudes.",
+              "correct": true,
+              "explanation": "Adam maintains an exponentially decaying average of past squared gradients, which helps to adjust the learning rate for each parameter and mitigate the zig-zagging problem."
+            },
+            {
+              "text": "It keeps averages of past gradient directions.",
+              "correct": false,
+              "explanation": "While momentum-based optimisers keep track of past gradient directions to set adaptive learning rates, the main source of the zig-zagging problem are gradient magnitudes."
+            },
+            {
+              "text": "It keeps averages of past gradient similarities.",
+              "correct": false,
+              "explanation": "Adam does not compute averages based on gradient similarities; it focuses on magnitudes and squared gradients."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "What is the total norm as referred to in the context of gradient clipping?",
+          "options": [
+            {
+              "text": "The norm of the vector containing the norms of all parameter gradients.",
+              "correct": true,
+              "explanation": ""
+            },
+            {
+              "text": "The norm of the vector containing all parameter gradients.",
+              "correct": false,
+              "explanation": "although this option is correct for the special case of the L2 norm."
+            },
+            {
+              "text": "The sum of the norms of all parameter vectors.",
+              "correct": false,
+              "explanation": "In gradient clipping, the total norm is computed over all gradient norms as if they were concatenated into a single vector."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "In the learning rate scheduler example, what is the learning rate after 280B tokens?",
+          "options": [
+            {
+              "text": "0.006",
+              "correct": false,
+              "explanation": "This learning rate is too high for the given point in training."
+            },
+            {
+              "text": "0.0006",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "0.00006",
+              "correct": true,
+              "explanation": ""
+            }
+          ],
+          "images": ["images/learning-rate-scheduler.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "Consider a case of batch accumulation over three micro-batches with sizes [800, 1000, 600] where the summed micro-batch losses are [960, 1300, 900]. What is the loss over the full accumulation?",
+          "options": [
+            {
+              "text": "1.23",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "1.32",
+              "correct": true,
+              "explanation": "The total loss is calculated by dividing the sum of all micro-batch losses by the sum of all micro-batch sizes: (960 + 1300 + 900) / (800 + 1000 + 600) = 3160 / 2400 = 1.3167 Rounding to two decimal places gives 1.32."
+            },
+            {
+              "text": "1.33",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "To which of the following would we typically not apply weight decay?",
+          "options": [
+            {
+              "text": "the weights of the layer norms",
+              "correct": true,
+              "explanation": "Weight decay is generally not applied to the weights of layer normalisation layers, as these parameters are crucial for maintaining the normalised distribution of activations."
+            },
+            {
+              "text": "the weights of the linear layers",
+              "correct": false,
+              "explanation": "Applying weight decay to the weights of linear layers is a common regularisation practice to prevent overfitting."
+            },
+            {
+              "text": "the weights of the attention layers",
+              "correct": false,
+              "explanation": "Weight decay is often applied to the weights within attention mechanisms to promote generalisation."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "3.3",
+      "questions": [
+        {
+          "number": 1,
+          "question": "Assuming a token/byte ratio of 0.75 for English text, how many tokens would we expect to be in the text-only version of the latest Common Crawl dump?",
+          "options": [
+            {
+              "text": "600 billion",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "6 trillion",
+              "correct": true,
+              "explanation": "The text extracted from the latest Common Crawl dump (2024-51) comprises approximately 7.37 TiB. Converting terabytes to bytes and multiplying with 0.75 gives approximately 6 trillion tokens."
+            },
+            {
+              "text": "67 trillion",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Looking at the slide Impact of filtering, which set of filters is the second-best set?",
+          "options": [
+            {
+              "text": "C4 Filters",
+              "correct": true,
+              "explanation": ""
+            },
+            {
+              "text": "FineWeb",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "Gopher",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": ["images/filtering-impact.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Why is deduplication so important in dataset curation for pretraining LLMs?",
+          "options": [
+            {
+              "text": "It prevents overfitting, enhances data diversity, and reduces computational costs.",
+              "correct": true,
+              "explanation": "Deduplication ensures that models do not memorise repeated data, promotes exposure to diverse information, and reduces unnecessary computational load."
+            },
+            {
+              "text": "It ensures that the model memorises frequently occurring text patterns for better accuracy.",
+              "correct": false,
+              "explanation": "Memorising repeated patterns can lead to overfitting and reduced generalisation."
+            },
+            {
+              "text": "It increases the total dataset size, allowing the model to train on more tokens.",
+              "correct": false,
+              "explanation": "Deduplication reduces the dataset size by removing redundant data, but this is beneficial for training efficiency and model performance."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "What model is used in the educational quality classifier in FineWeb-EDU?",
+          "options": [
+            {
+              "text": "linear regression",
+              "correct": true,
+              "explanation": "The educational quality classifier is a simple linear regression model built upon embeddings obtained via the Snowflake-arctic-embed architecture."
+            },
+            {
+              "text": "Transformer",
+              "correct": false,
+              "explanation": "While Transformers are used to produce the input to the classifier (using the Snowflake-arctic-embed architecture), the classifier itself uses a linear regression model."
+            },
+            {
+              "text": "recurrent neural network",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "For the largest ablation model considered, how many points of average accuracy is FineWeb-EDU better than standard FineWeb?",
+          "options": [
+            {
+              "text": "2 points",
+              "correct": true,
+              "explanation": ""
+            },
+            {
+              "text": "4 points",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "6 points",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": ["images/largest-model-3.3.png"],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "3.4",
+      "questions": [
+        {
+          "number": 1,
+          "question": "What is the estimated computational cost for the smallest GPT-2 model and a dataset consisting of 2.5B tokens?",
+          "options": [
+            {
+              "text": "15,000,000,000",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "310,000,000,000,000,000",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "1,860,000,000,000,000,000",
+              "correct": true,
+              "explanation": "The computational cost C for training a language model can be estimated using the formula C = 6 x P x T, where P is the number of parameters and T is the number of tokens. For the smallest GPT-2 model with 124 million parameters and a dataset of 2.5 billion tokens: C = 6 x 124 x 10^6 x 2.5 x 10^9 = 1.86 x 10^18 FLOPs"
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "In the slide \"Performance improves smoothly with scale\", what does each point of the thick black line in the leftmost plot correspond to?",
+          "options": [
+            {
+              "text": "the model with the lowest test loss for a specific compute budget",
+              "correct": true,
+              "explanation": "Each point on the thick black line represents a model that achieves the lowest test loss given a particular compute budget, illustrating the optimal trade-off between model size and training duration."
+            },
+            {
+              "text": "the model with the lowest test loss for a specific number of parameters",
+              "correct": false,
+              "explanation": "The plot focuses on compute budgets rather than solely on the number of parameters."
+            },
+            {
+              "text": "the model with the lowest test loss for a specific training set size",
+              "correct": false,
+              "explanation": "The plot is centered on compute budgets, not directly on training set sizes."
+            }
+          ],
+          "images": ["images/performance-vs-scale.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "An 8x A100 system can do approximately 64 exaflops per 24 hours. How many tokens can we expect to train a small GPT-2 model (124M parameters) on during that time?",
+          "options": [
+            {
+              "text": "8.6T",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "860B",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "86B",
+              "correct": true,
+              "explanation": "Given the computational capacity (C = 64 x 10^18 FLOPs) and the model size (P = 124 x 10^6), we can estimate the number of tokens T as T = C / (6 x P) = 64 x 10^18 / (6 x 124 x 10^6) = 86 x 10^9 tokens. This equates to approximately 86 billion tokens."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "Based on the results from the Chinchilla paper, approximately how many tokens should we train on per model parameter in a compute-optimal model?",
+          "options": [
+            {
+              "text": "6",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "20",
+              "correct": true,
+              "explanation": "Looking at the slide \"Compute-optimal models\", the optimal model size of 63B parameters is achieved for 1.4T tokens. This is approximately 20 tokens per parameter."
+            },
+            {
+              "text": "100",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": ["images/compute-optimal.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "Based on the results from the Chinchilla paper, which of the following models was least compute-optimal?",
+          "options": [
+            {
+              "text": "Gopher (280B)",
+              "correct": false,
+              "explanation": "While Gopher was not compute-optimal, Megatron-Turing NLG is even less so."
+            },
+            {
+              "text": "GPT-3 (175B)",
+              "correct": false,
+              "explanation": "GPT-3 also deviated from compute-optimal training, but not to the extent of Megatron-Turing NLG."
+            },
+            {
+              "text": "Megatron-Turing NLG (530B)",
+              "correct": true,
+              "explanation": "Megatron-Turing NLG, with 530 billion parameters, was significantly undertrained relative to the compute-optimal guidelines suggested in the Chinchilla paper."
+            }
+          ],
+          "images": ["images/chinchilla.png"],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "3.5",
+      "questions": [
+        {
+          "number": 1,
+          "question": "How many trainable parameters does the GPT-3 model have?",
+          "options": [
+            {
+              "text": "117 B",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "175 B",
+              "correct": true,
+              "explanation": ""
+            },
+            {
+              "text": "1542 B",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "What was the main insight that came with GPT-1?",
+          "options": [
+            {
+              "text": "Next word prediction is an effective pre-training strategy for many tasks in NLP",
+              "correct": true,
+              "explanation": "GPT-1 demonstrated that unsupervised pre-training using next word prediction could significantly improve performance across various NLP tasks."
+            },
+            {
+              "text": "Even 117-M-parameter models can be effectively trained on suitable hardware",
+              "correct": false,
+              "explanation": "While GPT-1 had 117 million parameters, the main insight was related to the effectiveness of unsupervised pre-training, not hardware capabilities."
+            },
+            {
+              "text": "Masked language modelling is more important than next sentence prediction",
+              "correct": false,
+              "explanation": "This insight is associated with BERT, not GPT-1."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Consider the Winograd example in the slide on zero-shot learning. Which of the following would be the matching prompt for a next-word distribution where p(demonstrators) > p(councilmen) and they = demonstrators?",
+          "options": [
+            {
+              "text": "The city councilmen refused the demonstrators a permit because they advocated violence.",
+              "correct": true,
+              "explanation": "In this sentence, they refers to demonstrators."
+            },
+            {
+              "text": "The demonstrators attacked the city councilmen because they refused them a permit.",
+              "correct": false,
+              "explanation": "Here, they refers to councilmen, not demonstrators."
+            },
+            {
+              "text": "The city councilmen refused the demonstrators additional permits because they were too expensive.",
+              "correct": false,
+              "explanation": "In this context, they refers to permits, not demonstrators."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "How is in-context learning different from zero-shot learning?",
+          "options": [
+            {
+              "text": "The model can learn new tasks from examples.",
+              "correct": true,
+              "explanation": "In-context learning involves providing the model with examples within the input context, enabling it to adapt to new tasks without parameter updates."
+            },
+            {
+              "text": "The model has more than one attempt at predicting the next word.",
+              "correct": false,
+              "explanation": "Both in-context and zero-shot learning involve single forward passes for predictions."
+            },
+            {
+              "text": "The model can update its gradients based on the words in the context of the prediction.",
+              "correct": false,
+              "explanation": "In-context learning does not involve gradient updates; the model adapts based on the input context alone."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "In the slide on prompt engineering, how much better was the LLM-designed prompt compared to the best human-designed prompt?",
+          "options": [
+            {
+              "text": "3.3 points",
+              "correct": true,
+              "explanation": "The LLM-designed prompt outperformed the best human-designed prompt by 3.3 points, indicating a measurable improvement in performance."
+            },
+            {
+              "text": "3.3 percent",
+              "correct": false,
+              "explanation": "A 3.3 percent improvement from 78.7 (the accuracy of the best human-designed prompt) would correspond to an accuracy of 81.3, not 82.0 (the accuracy obtained with the LLM-designed prompt)."
+            },
+            {
+              "text": "3.3 times",
+              "correct": false,
+              "explanation": "The improvement was not a multiple of 3.3 times but an increase of 3.3 points."
+            }
+          ],
+          "images": ["images/prompt-engrineering.png"],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "3.6",
+      "questions": [
+        {
+          "number": 1,
+          "question": "According to the lecture, what mainly determines the overall environmental impact of chatbots?",
+          "options": [
+            {
+              "text": "The scale of use across many users",
+              "correct": true,
+              "explanation": "The environmental impact of chatbots is largely influenced by how widely they are used, as this affects the total computational resources consumed."
+            },
+            {
+              "text": "The size of the language model",
+              "correct": false,
+              "explanation": "While model size contributes to the environmental impact, it is not the main determinant."
+            },
+            {
+              "text": "The length of individual prompts",
+              "correct": false,
+              "explanation": "The length of prompts can affect the computational cost of individual interactions, but the overall impact is more significantly driven by the scale of use."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Why is water consumption by data centres especially concerning?",
+          "options": [
+            {
+              "text": "Many large data centres are located in water-scarce regions",
+              "correct": true,
+              "explanation": "The placement of data centres in areas with limited water resources raises concerns about sustainability and environmental impact."
+            },
+            {
+              "text": "Water can corrode or clog cooling equipment",
+              "correct": false,
+              "explanation": "While water quality is important for cooling systems, the primary concern is the overall water consumption in water-scarce areas."
+            },
+            {
+              "text": "Water is more expensive than electricity",
+              "correct": false,
+              "explanation": "The cost of water can vary, but the environmental concern is more about sustainability than cost."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Why did the BLOOM model have lower training emissions than GPT-3?",
+          "options": [
+            {
+              "text": "It relied on a cleaner energy mix",
+              "correct": true,
+              "explanation": "BLOOM's training process utilised a higher proportion of renewable energy sources, leading to lower emissions."
+            },
+            {
+              "text": "It has fewer trainable parameters",
+              "correct": false,
+              "explanation": "The models were comparable in size."
+            },
+            {
+              "text": "It was trained to be Chinchilla-optimal",
+              "correct": false,
+              "explanation": "Both models were trained with similar compute budgets, so the difference in emissions is more likely due to the energy mix rather than training efficiency."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "All other factors being equal, why might a data centre with a low PUE tend to have a higher WUE?",
+          "options": [
+            {
+              "text": "Electrical efficiency often involves cooling techniques that rely more heavily on water",
+              "correct": true,
+              "explanation": "Data centres with low PUE often use water-based cooling systems rather than air-based systems, which can lead to higher water usage."
+            },
+            {
+              "text": "The definitions of PUE and WUE are inversely related to each other",
+              "correct": false,
+              "explanation": "PUE and WUE are independent metrics that measure different aspects of data centre efficiency."
+            },
+            {
+              "text": "Water consumption increases as computing efficiency improves",
+              "correct": false,
+              "explanation": "Increased computing efficiency does not necessarily lead to increased water consumption; it depends on the cooling methods used and the specific design of the data centre."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "Which conclusion best reflects the lecture's overall argument?",
+          "options": [
+            {
+              "text": "Responsible chatbot use requires action at several levels",
+              "correct": true,
+              "explanation": "The lecture emphasises that addressing the environmental impact of chatbots involves efforts from users, developers, and policymakers."
+            },
+            {
+              "text": "Environmental concerns about chatbots are exaggerated compared to other cloud technologies",
+              "correct": false,
+              "explanation": "The lecture highlights specific concerns about the environmental impact of chatbots (compared to, for example, traditional search engines), suggesting that they are significant and warrant attention."
+            },
+            {
+              "text": "Chatbots' environmental problems can be solved using technological improvements",
+              "correct": false,
+              "explanation": "While technological improvements can help reduce the environmental impact, the lecture argues that a multifaceted approach involving behavioural changes and policy interventions is necessary for responsible chatbot use."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    }
+  ]
+}

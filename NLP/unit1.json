@@ -1,0 +1,725 @@
+{
+  "unit": "Unit 1",
+  "lectures": [
+    {
+      "id": "1.1",
+      "questions": [
+        {
+          "number": 1,
+          "question": "What is the datatype of token ID vectors?",
+          "options": [
+            {
+              "text": "list[str]",
+              "correct": false,
+              "explanation": "While token IDs may conceptually represent strings in some cases (e.g., when they represent words), the datatype of token ID vectors is not a list of strings. Token IDs are numerical representations."
+            },
+            {
+              "text": "Tensor[int]",
+              "correct": true,
+              "explanation": "Token ID vectors are represented as integer tensors, where each integer corresponds to a unique token in the vocabulary."
+            },
+            {
+              "text": "Tensor[float]",
+              "correct": false,
+              "explanation": "Token ID vectors are integers, not floating-point numbers. Floating-point tensors are typically used for embeddings, not IDs."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Whitespace tokenisation can suffer from undersegmentation. What is an example of oversegmentation?",
+          "options": [
+            {
+              "text": "co-writer/director → co - writer / director",
+              "correct": true,
+              "explanation": "Oversegmentation occurs when a single meaningful token is split into multiple, less meaningful tokens. In this case, co-writer/director is split unnecessarily into five tokens, including the less meaningful co, -, writer."
+            },
+            {
+              "text": "co-writer/director → co-writer / director",
+              "correct": false,
+              "explanation": "This is an example of reasonable segmentation, where tokens are split at logical boundaries without breaking meaning."
+            },
+            {
+              "text": "co-writer/director → co-writer/director",
+              "correct": false,
+              "explanation": "This is an example of no segmentation at all, which may not capture subunits for downstream tasks."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Suppose we apply the regex-based tokeniser to the negative review. Which tokens would we get? (Separate tokens are enclosed in square brackets.)",
+          "options": [
+            {
+              "text": "[relentless] [gaiety] [of] [the] [1920's] [,]",
+              "correct": false,
+              "explanation": "This segmentation keeps \"1920's\" as a single token, which does not match the regex-based tokeniser behavior of splitting contractions and possessive markers."
+            },
+            {
+              "text": "[relentless] [gaiety] [of] [the] [1920] ['s] [,]",
+              "correct": true,
+              "explanation": "The regex-based tokeniser splits possessive markers (e.g., Jackson's) into separate tokens, which matches this output."
+            },
+            {
+              "text": "[relentless] [gaiety] [of] [the] [1920] ['] [s] [,]",
+              "correct": false,
+              "explanation": "This segmentation splits 's into two tokens, which does not match the regex shown in the slide."
+            }
+          ],
+          "images": ["images/negative-review.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "What is an example of lemmatisation?",
+          "options": [
+            {
+              "text": "centers → center",
+              "correct": true,
+              "explanation": "Lemmatisation reduces words to their base or dictionary form (lemma). Here, centers is reduced to center."
+            },
+            {
+              "text": "center → centre",
+              "correct": false,
+              "explanation": "This is not lemmatisation but a change of spelling (e.g., American to British English)."
+            },
+            {
+              "text": "center → centers",
+              "correct": false,
+              "explanation": "This represents inflection (e.g., singular to plural), not lemmatisation."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "In the graph for the Heaps' law experiment, after how many tokens, approximately, had the vocabulary reached half of its final size?",
+          "options": [
+            {
+              "text": "250,000",
+              "correct": true,
+              "explanation": "At 250,000 tokens, the vocabulary size is slightly more than 15,000 tokens, whereas the final size is slightly more than 30,000 tokens."
+            },
+            {
+              "text": "500,000",
+              "correct": false,
+              "explanation": "At 500,000 tokens, the vocabulary size is approximately 22,500 tokens, more than half the final size of slightly more than 30,000 tokens."
+            },
+            {
+              "text": "1,000,000",
+              "correct": false,
+              "explanation": "At 1,000,000 tokens, the vocabulary size is approximately 28,000 tokens, quite close to the final size of slightly more than 30,000 tokens."
+            }
+          ],
+          "images": ["images/heaps-law.png"],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "1.2",
+      "questions": [
+        {
+          "number": 1,
+          "question": "In BPE, how many merge operations give us a vocabulary of 1,024 tokens?",
+          "options": [
+            {
+              "text": "256",
+              "correct": false,
+              "explanation": "With only 256 merge operations, the resulting vocabulary size would be 256 + 256 = 512 tokens."
+            },
+            {
+              "text": "768",
+              "correct": true,
+              "explanation": "If we start with a base vocabulary of size 256 (all possible single bytes), adding 768 merges gives us a total of 1,024 tokens. Each merge adds one token to the vocabulary."
+            },
+            {
+              "text": "1,024",
+              "correct": false,
+              "explanation": "1,024 merge operations would create a vocabulary with 1,280 tokens when starting from a base vocabulary of 256."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Unicode codepoints between 2048 and 65535 need three bytes in UTF-8. How many bytes are in the UTF-8 encoding of the Unicode string oóओ, where the last letter is the letter O in Devanagari?",
+          "options": [
+            {
+              "text": "4",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "5",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "6",
+              "correct": true,
+              "explanation": "The UTF-8 encoding is as follows: o → 1 byte (7-bit ASCII), ó → 2 bytes (cf. the example from Icelandic), ओ → 3 bytes (cf. the Unicode chart, where this letter has codepoint 0913, corresponding to 2323). Adding these gives a total of 6 bytes."
+            }
+          ],
+          "images": ["images/devanagari.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Suppose we apply the BPE algorithm to the string aaaa and do at most four merges. What is the second merge rule extracted by the algorithm?",
+          "options": [
+            {
+              "text": "a + a → [aa]",
+              "correct": false,
+              "explanation": "This is the first merge rule extracted by the algorithm, not the second."
+            },
+            {
+              "text": "[aa] + a → [aaa]",
+              "correct": false,
+              "explanation": "The second merge rule is not applied to a string with occurrences of both [aa] and a but to the result of the first merge rule, which is [aa][aa]."
+            },
+            {
+              "text": "[aa] + [aa] → [aaaa]",
+              "correct": true,
+              "explanation": "After the first merge rule, the string becomes [aa][aa]. The second merge rule is then [aa] + [aa] → [aaaa]."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "Suppose we apply the BPE algorithm to a very long English text and do a lot of merge rules. Which token would we expect not to see in our final vocabulary?",
+          "options": [
+            {
+              "text": "[eaux]",
+              "correct": true,
+              "explanation": "This should be a rare token even in very long English texts, especially compared to the other two."
+            },
+            {
+              "text": "[tion]",
+              "correct": false,
+              "explanation": "This token is a very frequent subword in English (e.g., action, nation) and is likely to appear in the final vocabulary after many merges."
+            },
+            {
+              "text": "[thes]",
+              "correct": false,
+              "explanation": "This token may not be as frequent as [tion] but appears in several English words (e.g., hypothesis, anaesthesia) and should be much more likely than [eaux]."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "How many tokens are in the string \"Linköping University\", according to the o200k_base tokeniser?",
+          "options": [
+            {
+              "text": "2",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "3",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "4",
+              "correct": true,
+              "explanation": "According to Tiktokenizer, the o200k_base tokeniser tokenises this string as Link, ö, ping, and University."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "1.3",
+      "questions": [
+        {
+          "number": 1,
+          "question": "Which of the following best describes tokenisation fairness?",
+          "options": [
+            {
+              "text": "Whether different languages are tokenised with similar efficiency",
+              "correct": true,
+              "explanation": "Tokenisation fairness refers to the equitable treatment of different languages in terms of how efficiently they are tokenised, which can impact model performance across languages."
+            },
+            {
+              "text": "Whether a model produces unbiased outputs across languages",
+              "correct": false,
+              "explanation": "This describes model fairness more broadly, not specifically tokenisation fairness."
+            },
+            {
+              "text": "Whether all languages are equally frequent in the tokeniser training data",
+              "correct": false,
+              "explanation": "While data balance can affect tokenisation fairness, it is not the definition of tokenisation fairness itself."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "What is a tokenisation premium?",
+          "options": [
+            {
+              "text": "The factor by which a tokeniser requires more tokens to represent one language than another",
+              "correct": true,
+              "explanation": "A tokenisation premium quantifies how much more (or less) efficient a tokeniser is for one language compared to another, measured in terms of the number of tokens needed for the same text."
+            },
+            {
+              "text": "The factor by which a tokeniser requires more compute for one language than for another",
+              "correct": false,
+              "explanation": "This describes computational efficiency, not tokenisation premium."
+            },
+            {
+              "text": "The factor by which a tokeniser requires more training data for one language than for another",
+              "correct": false,
+              "explanation": "This describes data requirements, not tokenisation premium."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Why does standard BPE tend to disadvantage low-resource languages in multilingual settings?",
+          "options": [
+            {
+              "text": "Because merge rules are learned from the most frequent token pairs in the entire corpus",
+              "correct": true,
+              "explanation": "In multilingual settings, BPE learns merge rules based on the most frequent token pairs across all languages. Low-resource languages may have fewer occurrences of their unique token pairs, leading to less optimal tokenisation for those languages."
+            },
+            {
+              "text": "Because low-resource languages require more byte pairs than high-resource languages",
+              "correct": false,
+              "explanation": "The number of byte pairs required is not inherently higher for low-resource languages; rather, it is the frequency of token pairs that affects the learned merges."
+            },
+            {
+              "text": "Because low-resource languages have a higher compression rate than high-resource languages",
+              "correct": false,
+              "explanation": "Compression rate is not directly related to the disadvantage faced by low-resource languages in BPE tokenisation."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "In the lecture, \"compression rate\" is defined as:",
+          "options": [
+            {
+              "text": "The number of bytes divided by the number of tokens",
+              "correct": true,
+              "explanation": "Compression rate is defined as the ratio of the number of bytes to the number of tokens, indicating how efficiently text is represented in terms of tokenisation."
+            },
+            {
+              "text": "The number of tokens divided by the number of characters",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "The number of bytes divided by the number of characters",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "Which of the following statements best reflects the general lesson of the lecture on tokenisation fairness?",
+          "options": [
+            {
+              "text": "Tokenisation is one layer of a broader system of linguistic inequality, and improving it involves normative trade-offs",
+              "correct": true,
+              "explanation": "Tokenisation fairness is part of a larger context of linguistic inequality, and addressing it requires considering various trade-offs and ethical considerations."
+            },
+            {
+              "text": "Unfair tokenisation mainly reflects data imbalance and will largely disappear as multilingual training corpora grow",
+              "correct": false,
+              "explanation": "While data imbalance can contribute to unfair tokenisation, it is not the sole factor, and unfairness may persist even with larger corpora."
+            },
+            {
+              "text": "Fair tokenisation can be achieved by optimising fairness metrics (such as compression rate) during training",
+              "correct": false,
+              "explanation": "While optimising fairness metrics can help, it does not guarantee fair tokenisation, as other factors also play a role."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "1.4",
+      "questions": [
+        {
+          "number": 1,
+          "question": "We initialise an embedding layer e as torch.nn.Embedding(15000, 100). What is the number of trainable parameters in e?",
+          "options": [
+            {
+              "text": "15,000",
+              "correct": false,
+              "explanation": "This value corresponds to the number of unique embeddings, not the total number of parameters in the layer."
+            },
+            {
+              "text": "15,100",
+              "correct": false,
+              "explanation": "This does not match the formula for calculating the total number of parameters in an embedding layer."
+            },
+            {
+              "text": "1,500,000",
+              "correct": true,
+              "explanation": "The number of trainable parameters in the embedding layer is given by the formula: number of embeddings × embedding size. Here, 15000 × 100 = 1500000."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "We build a continuous bag-of-words classifier using the embedding layer e from the previous question and a softmax classifier. Assuming five classes and no bias, what is the correct formula for the number of trainable parameters of the classifier?",
+          "options": [
+            {
+              "text": "number of parameters in e + 105",
+              "correct": false,
+              "explanation": "Adding 105 parameters would only account for a softmax classifier with 5 classes and 21 inputs, which does not match the 100-dimensional embeddings."
+            },
+            {
+              "text": "number of parameters in e + 500",
+              "correct": true,
+              "explanation": "For a softmax classifier with 100 inputs and 5 output classes, the weight matrix contains 100 × 5 = 500 parameters."
+            },
+            {
+              "text": "number of parameters in e + 7500",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": [],
+          "references_previous_question": true
+        },
+        {
+          "number": 3,
+          "question": "True or false? \"The embeddings learned for the words university and school are similar.\"",
+          "options": [
+            {
+              "text": "True",
+              "correct": false,
+              "explanation": "While embeddings for related words can be similar, their similarity depends on the specific training task."
+            },
+            {
+              "text": "False",
+              "correct": false,
+              "explanation": "This assumption cannot always be made, as similarity depends on the task."
+            },
+            {
+              "text": "Depends on the training task",
+              "correct": true,
+              "explanation": "The similarity between embeddings for university and school depends on the nature of the training task and dataset. For example, in a task focusing on education, they may be similar, but in a task unrelated to education, they may not."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "We train a continuous bag-of-word classifier on the task of predicting the category of a product as either \"book\" or \"bike\" based on a product description. Which of the following word pairs can be expected to have embeddings with low cosine similarities?",
+          "options": [
+            {
+              "text": "pages, gear",
+              "correct": true,
+              "explanation": "The words pages and gear belong to very different semantic categories (\"book\" and \"bike\", respectively), so their embeddings are expected to have low cosine similarity."
+            },
+            {
+              "text": "pages, chapter",
+              "correct": false,
+              "explanation": "Both words are strongly related to the \"book\" category, so their embeddings are likely to have high cosine similarity."
+            },
+            {
+              "text": "gear, brake",
+              "correct": false,
+              "explanation": "Both words are strongly related to the \"bike\" category, so their embeddings are likely to have high cosine similarity."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "Which of the following is an instance of \"pre-training and fine-tuning\"?",
+          "options": [
+            {
+              "text": "initialise the embedding layer with random weights + train the network on a prediction task",
+              "correct": false,
+              "explanation": "This describes standard training without any pre-training step."
+            },
+            {
+              "text": "initialise the embedding layer with trained weights + train the full network on a prediction task",
+              "correct": true,
+              "explanation": "Pre-training refers to using weights trained on a related task or large corpus, and fine-tuning involves further training on a specific task. This description matches that process."
+            },
+            {
+              "text": "initialise the embedding layer with trained weights + train the other parts on a prediction task",
+              "correct": false,
+              "explanation": "While this involves pre-trained embeddings, freezing the embedding layer and training only other parts of the network does not fully qualify as fine-tuning."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "1.5",
+      "questions": [
+        {
+          "number": 1,
+          "question": "Say that we have a vocabulary of half a million English words, and suppose that the word parsnip has the number 350,740. How long is the one-hot vector for parsnip?",
+          "options": [
+            {
+              "text": "1",
+              "correct": false,
+              "explanation": "The value 1 would be the length of the vector if there were only one word in the vocabulary, but this is not the case here."
+            },
+            {
+              "text": "350,740",
+              "correct": false,
+              "explanation": "This value represents the index of the word parsnip in the vocabulary, not the length of the one-hot vector."
+            },
+            {
+              "text": "500,000",
+              "correct": true,
+              "explanation": "In a one-hot representation, the length of the vector corresponds to the size of the vocabulary. Since there are 500,000 words, the vector is 500,000 elements long."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "What is a typical length for a word embedding?",
+          "options": [
+            {
+              "text": "30",
+              "correct": false,
+              "explanation": "A length of 30 would be too short for word embeddings to effectively capture the complexity of semantic relationships."
+            },
+            {
+              "text": "300",
+              "correct": true,
+              "explanation": "A typical word embedding, such as those used in word2vec or GloVe, often has a length of 300 dimensions, which provides a good balance between representational power and computational efficiency."
+            },
+            {
+              "text": "30,000",
+              "correct": false,
+              "explanation": "This value is far too large for a word embedding, leading to unnecessary computational costs and potential overfitting."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "What does it mean if two vectors have a cosine similarity of 1?",
+          "options": [
+            {
+              "text": "The angle between them is 0 degrees.",
+              "correct": true,
+              "explanation": "A cosine similarity of 1 indicates that the vectors are perfectly aligned, meaning the angle between them is 0 degrees."
+            },
+            {
+              "text": "The angle between them is 90 degrees.",
+              "correct": false,
+              "explanation": "An angle of 90 degrees corresponds to a cosine similarity of 0, indicating that the vectors are orthogonal (no similarity)."
+            },
+            {
+              "text": "The angle between them is 180 degrees.",
+              "correct": false,
+              "explanation": "An angle of 180 degrees corresponds to a cosine similarity of −1, indicating that the vectors are perfectly opposite."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "The Distributional Hypothesis is often summarised in the slogan \"You shall know a word by the company it keeps\". What does the word \"company\" refer to?",
+          "options": [
+            {
+              "text": "Words that co-occur with the other word",
+              "correct": true,
+              "explanation": "The \"company\" refers to the words that frequently co-occur in similar contexts. This is the basis of the Distributional Hypothesis, which suggests that the meaning of a word can be inferred from its context."
+            },
+            {
+              "text": "Words with similar word embeddings",
+              "correct": false,
+              "explanation": "While word embeddings can encode relationships between words, the company specifically refers to co-occurring words in context."
+            },
+            {
+              "text": "Words with similar meanings",
+              "correct": false,
+              "explanation": "Words with similar meanings often have similar co-occurrences, but the company directly refers to the surrounding words, not their meanings."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "Which of the following is not used to evaluate word embeddings?",
+          "options": [
+            {
+              "text": "cross-entropy loss",
+              "correct": true,
+              "explanation": "Cross-entropy loss is used during training to optimise word embeddings, but it is not a direct evaluation metric for the quality of embeddings."
+            },
+            {
+              "text": "odd-one-out test",
+              "correct": false,
+              "explanation": "The odd-one-out test evaluates embeddings by determining which word does not fit in a group, assessing semantic relationships."
+            },
+            {
+              "text": "analogy benchmarks",
+              "correct": false,
+              "explanation": "Analogy benchmarks, such as \"king − man + woman = queen\", are commonly used to evaluate how well embeddings capture relationships between words."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "1.6",
+      "questions": [
+        {
+          "number": 1,
+          "question": "The standard skip-gram model (without negative sampling) is a k-class classification problem. What would be a realistic value for k?",
+          "options": [
+            {
+              "text": "2",
+              "correct": false,
+              "explanation": "k = 2 would only apply to binary classification, not a multi-class task like the standard skip-gram model, where the model predicts context words from a large vocabulary."
+            },
+            {
+              "text": "2,000",
+              "correct": false,
+              "explanation": "This value is not realistic for the full vocabulary size in most corpora."
+            },
+            {
+              "text": "20,000",
+              "correct": true,
+              "explanation": "In the standard skip-gram model, k corresponds to the size of the vocabulary, which is typically tens of thousands."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Why is the task of predicting the other word in a skip-gram an interesting pre-training task?",
+          "options": [
+            {
+              "text": "Predicting the other word forces the model to learn co-occurrence statistics",
+              "correct": true,
+              "explanation": "Predicting context words requires the model to capture co-occurrence patterns, which are key to learning meaningful word embeddings."
+            },
+            {
+              "text": "Predicting the other word can be done efficiently",
+              "correct": false,
+              "explanation": "While efficiency is desirable, it is not the primary reason the task is interesting for pre-training."
+            },
+            {
+              "text": "Predicting the other word is a relatively simple task that can be learned with little data",
+              "correct": false,
+              "explanation": "Skip-gram models require large amounts of data to effectively learn word representations, as they rely on co-occurrence patterns across diverse contexts."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "In the skip-gram model, we distinguish between a target word w and a context word c. When would we want P(c | w) to be high?",
+          "options": [
+            {
+              "text": "The word vectors for w and c have a high cosine similarity",
+              "correct": true,
+              "explanation": "We want to tune the word vectors in such a way that P(c | w) is high, and this requires them to have high cosine similarity."
+            },
+            {
+              "text": "The word vectors for w and c have a low cosine similarity",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "The two words w and c are frequent",
+              "correct": false,
+              "explanation": "Word frequency does not directly determine P(c|w). Instead, the co-occurrence relationship between w and c matters."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "What is the basic idea behind the \"skip-gram with negative sampling\" model?",
+          "options": [
+            {
+              "text": "approximate the probabilities P(c | w) using a simpler prediction task",
+              "correct": true,
+              "explanation": "Negative sampling approximates P(c | w) by replacing the computationally expensive softmax with a binary classification task: distinguishing true (positive) context words from randomly sampled (negative) ones."
+            },
+            {
+              "text": "decompose the softmax into a tree-like structure of simpler computations",
+              "correct": false,
+              "explanation": "This describes hierarchical softmax, which is another method for optimizing P(c | w), not negative sampling."
+            },
+            {
+              "text": "replace the word embeddings with an efficient sampling process",
+              "correct": false,
+              "explanation": "Negative sampling retains word embeddings but uses an efficient sampling-based approximation for training."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "Which of the following is not used to speed up the \"skip-gram with negative sampling\" model?",
+          "options": [
+            {
+              "text": "randomly exclude stop words and other non-content words from the training data",
+              "correct": true,
+              "explanation": "Excluding stop words is a common preprocessing step that can speed up training by reducing unnecessary computations, but is not used specifically in skip-gram with negative sampling."
+            },
+            {
+              "text": "randomly discard tokens with a probability that grows with the token frequency",
+              "correct": false,
+              "explanation": "This is the subsampling technique implemented in skip-gram with negative sampling, which helps speed up training by reducing the impact of frequent words."
+            },
+            {
+              "text": "randomly sample window sizes up to a maximum size with uniform probability",
+              "correct": false,
+              "explanation": "Rather than considering all window sizes up to the maximum size, the model samples these sizes at random to speed up the training."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    }
+  ]
+}

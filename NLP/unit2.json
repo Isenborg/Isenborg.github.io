@@ -1,0 +1,725 @@
+{
+  "unit": "Unit 2",
+  "lectures": [
+    {
+      "id": "2.1",
+      "questions": [
+        {
+          "number": 1,
+          "question": "What component would you not typically need in a pipeline for interlingual machine translation?",
+          "options": [
+            {
+              "text": "part-of-speech tagger",
+              "correct": false,
+              "explanation": "A part-of-speech tagger helps identify grammatical categories of words, which can be useful in an interlingual MT pipeline."
+            },
+            {
+              "text": "syntactic dependency parser",
+              "correct": false,
+              "explanation": "A syntactic dependency parser provides structural relationships between words, which is often essential for constructing an interlingual representation."
+            },
+            {
+              "text": "sentiment classifier",
+              "correct": true,
+              "explanation": "A sentiment classifier is not directly necessary for translation, as it is mainly used to analyse emotions in text rather than its syntactic or semantic structure."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "In the Noisy Channel Model, which of the following quantities do we want to maximize when translating from Arabic (A) to Swedish (S)?",
+          "options": [
+            {
+              "text": "P(A|S)P(S)",
+              "correct": true,
+              "explanation": "This is the decomposition of P(S|A) using Bayes' Rule."
+            },
+            {
+              "text": "P(S|A)",
+              "correct": false,
+              "explanation": "This expresses the probability of a target-language sentence given a source-language sentence, but the Noisy Channel Model rewrites this using Bayes' rule."
+            },
+            {
+              "text": "P(A|S)",
+              "correct": false,
+              "explanation": "This represents the likelihood of the source sentence given the target sentence, but it does not consider how likely the target sentence is in the target language."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Which of the following statements is true about word alignments when viewed as a mathematical relation R between the set of positions on the source side and the set of positions on the target side?",
+          "options": [
+            {
+              "text": "R is a function.",
+              "correct": false,
+              "explanation": "A function requires that each input (source position) maps to exactly one output (target position), but in word alignment, a single source word can align to multiple target words."
+            },
+            {
+              "text": "The inverse of R is a function.",
+              "correct": false,
+              "explanation": "The inverse of R would mean each target position maps to exactly one source position, but this is also not true in word alignment."
+            },
+            {
+              "text": "Neither of these statements is true.",
+              "correct": true,
+              "explanation": "Word alignment is a relation, not necessarily a function, because it allows one-to-many and many-to-one mappings."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "Which of the following is an advantage of neural machine translation (NMT) over statistical machine translation (SMT)?",
+          "options": [
+            {
+              "text": "NMT systems do not need complex feature engineering.",
+              "correct": true,
+              "explanation": "Unlike SMT, which relies on manually designed features, NMT automatically learns representations from data."
+            },
+            {
+              "text": "NMT systems can be trained without parallel text.",
+              "correct": false,
+              "explanation": "Like SMT, NMT requires parallel text for supervised training, although some unsupervised approaches exist."
+            },
+            {
+              "text": "NMT systems are more interpretable than SMT systems.",
+              "correct": false,
+              "explanation": "NMT models are often criticised for their lack of interpretability compared to SMT models, which have explicit probabilistic structures."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "Why does the BLEU evaluation measure include a brevity penalty?",
+          "options": [
+            {
+              "text": "It is easy to achieve high precision with short translations.",
+              "correct": true,
+              "explanation": "Short translations can match many n-grams from the reference translation while omitting important content, inflating the BLEU score without truly reflecting translation quality."
+            },
+            {
+              "text": "It is easy to achieve high recall with short translations.",
+              "correct": false,
+              "explanation": "Recall measures how much of the reference translation is captured, and short translations tend to have low recall."
+            },
+            {
+              "text": "Short translations should be penalised because they are typically not very informative.",
+              "correct": false,
+              "explanation": "While short translations may be less informative, the BLEU brevity penalty is specifically designed to counteract artificially high precision scores."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "2.2",
+      "questions": [
+        {
+          "number": 1,
+          "question": "Which of the following tasks do not usually lend themselves to the use of autoregressive language models?",
+          "options": [
+            {
+              "text": "machine translation",
+              "correct": false,
+              "explanation": "Machine translation is commonly handled by autoregressive models, where each token is generated based on previously generated tokens."
+            },
+            {
+              "text": "text summarisation",
+              "correct": false,
+              "explanation": "Autoregressive models are widely used for text summarisation, where they generate a summary token by token."
+            },
+            {
+              "text": "document classification",
+              "correct": true,
+              "explanation": "Document classification is not typically performed using autoregressive models, as it does not require sequential token generation."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Suppose we translate from Arabic (A) to Swedish (S). Which of the following quantities does a neural sequence-to-sequence model learn?",
+          "options": [
+            {
+              "text": "P(S|A)",
+              "correct": true,
+              "explanation": "Neural sequence-to-sequence models learn the conditional probability P(S|A), which models the probability of a target sequence given a source sequence."
+            },
+            {
+              "text": "P(A|S)",
+              "correct": false,
+              "explanation": "This represents the probability of the source sentence given the target sentence, which is not what sequence-to-sequence models learn."
+            },
+            {
+              "text": "P(A, S)",
+              "correct": false,
+              "explanation": "This represents the joint probability of both sentences occurring together, which is not explicitly modelled in neural translation systems."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Which of the following resources do we need in order to train sequence-to-sequence translation models?",
+          "options": [
+            {
+              "text": "parallel texts for the source language-target language pair",
+              "correct": true,
+              "explanation": "Training a sequence-to-sequence model requires parallel text corpora to learn correspondences between the source and target language."
+            },
+            {
+              "text": "word alignments between the words in the source language and target language",
+              "correct": false,
+              "explanation": "Word alignments are useful for phrase-based statistical translation models but are not directly required for training modern neural translation models."
+            },
+            {
+              "text": "a language model for the target language",
+              "correct": false,
+              "explanation": "While a separate target-language model can help in some hybrid approaches, sequence-to-sequence models inherently learn a target language model during training."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "Which of the following parameters does not impact the space complexity of beam search?",
+          "options": [
+            {
+              "text": "number of possible translations for the source sentence",
+              "correct": true,
+              "explanation": "Beam search only keeps track of a fixed number of hypotheses, independent of the total number of possible translations."
+            },
+            {
+              "text": "width of the beam",
+              "correct": false,
+              "explanation": "A wider beam requires storing more hypotheses, increasing space complexity."
+            },
+            {
+              "text": "lengths of the generated target sentences",
+              "correct": false,
+              "explanation": "Longer sentences require more memory storage, impacting space complexity."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "Why do we use length normalisation together with beam search in decoding?",
+          "options": [
+            {
+              "text": "We do not want to penalise long translations.",
+              "correct": true,
+              "explanation": "Without length normalisation, longer translations can be disproportionately penalised because the probability of a sequence decreases as more tokens are added. Length normalisation mitigates this bias."
+            },
+            {
+              "text": "We do not want to penalise short translations.",
+              "correct": false,
+              "explanation": "Standard beam search often favours shorter translations because the probability of a sequence decreases as more tokens are added."
+            },
+            {
+              "text": "We want to avoid numerical overflow.",
+              "correct": false,
+              "explanation": "Numerical overflow is not a major concern in beam search; the primary issue is the tendency of shorter sequences to have higher probability scores."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "2.3",
+      "questions": [
+        {
+          "number": 1,
+          "question": "Which of the following NLP tasks is most likely to be handled comparatively well using static word vectors rather than contextual embeddings?",
+          "options": [
+            {
+              "text": "topic classification",
+              "correct": true,
+              "explanation": "Topic classification can often be effectively handled using static word vectors, as the overall topic of a document may not require deep contextual understanding of individual words."
+            },
+            {
+              "text": "coreference resolution",
+              "correct": false,
+              "explanation": "Coreference resolution often requires understanding the context in which words are used, making contextual embeddings more suitable."
+            },
+            {
+              "text": "word sense disambiguation",
+              "correct": false,
+              "explanation": "Word sense disambiguation relies heavily on context to determine the correct meaning of a word, making contextual embeddings more appropriate."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Consider the sentence \"Dogs may bark at strangers\" and assume that words are indexed from 1 to 5. Which attention weight do you expect to be highest?",
+          "options": [
+            {
+              "text": "alpha_31",
+              "correct": true,
+              "explanation": "When refining the representation for the word \"bark\" (position 3), the word \"dogs\" (position 1) is highly relevant to distinguish the word sense \"bark\" (as in the sound a dog makes) from other possible meanings (e.g., the outer layer of a tree). Therefore, we expect a high attention weight alpha_31."
+            },
+            {
+              "text": "alpha_33",
+              "correct": false,
+              "explanation": "The attention weight alpha_33 corresponds to the word \"bark\" attending to itself, which is typically the highest in self-attention mechanisms."
+            },
+            {
+              "text": "alpha_35",
+              "correct": false,
+              "explanation": "The word \"strangers\" (position 5) is less relevant to the meaning of \"bark\" in this context, so we would not expect a high attention weight alpha_35."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Consider following values for the example of \"Contextual word embeddings via attention\". h1 = [0.5539, 0.7239] h2 = [0.4111, 0.3878] h3 = [0.2376, 0.1264] Assuming that the attention score is computed using the unscaled dot product, what is the refined representation for h2?",
+          "options": [
+            {
+              "text": "[0.5084, 0.3194, 0.1467]",
+              "correct": false,
+              "explanation": "This is the vector of attention scores, not the refined representation."
+            },
+            {
+              "text": "[0.3962, 0.3279, 0.2759]",
+              "correct": false,
+              "explanation": "This is the vector of attention weights, not the refined representation."
+            },
+            {
+              "text": "[0.4198, 0.4488]",
+              "correct": true,
+              "explanation": "In self-attention, the output vector must have the same dimensionality as each representation h_i."
+            }
+          ],
+          "images": ["images/scaled_dot_product.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "Which of the following statements about the more general characterisation of attention in terms of queries, keys and values is true?",
+          "options": [
+            {
+              "text": "The output has the same length as each value.",
+              "correct": true,
+              "explanation": "In attention mechanisms, the output is a weighted sum of values, meaning it retains the same dimensionality as the values."
+            },
+            {
+              "text": "The query has the same length as each value.",
+              "correct": false,
+              "explanation": "The query and value dimensions can differ depending on the model architecture."
+            },
+            {
+              "text": "Each key has the same length as each value.",
+              "correct": false,
+              "explanation": "Keys and values do not necessarily have the same dimensionality, though they often do in standard self-attention."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "Consider an instance of multi-head attention with 8 heads where the queries and keys have size 256. What would be the typical key length in each block's attention mechanism?",
+          "options": [
+            {
+              "text": "256",
+              "correct": false,
+              "explanation": "The total query/key size is 256, but it is divided across the 8 attention heads."
+            },
+            {
+              "text": "32",
+              "correct": true,
+              "explanation": "The key length per head is 256/8 = 32 because the attention mechanism splits the dimensions evenly across multiple heads."
+            },
+            {
+              "text": "8",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "2.4",
+      "questions": [
+        {
+          "number": 1,
+          "question": "Which of the following is the main advantage of the Transformer architecture over recurrent neural networks?",
+          "options": [
+            {
+              "text": "direct access to all elements in the input sequence",
+              "correct": true,
+              "explanation": "Unlike RNNs, which process sequences sequentially, Transformers use self-attention, allowing each token to access all tokens in the input at once, leading to more efficient parallel computation."
+            },
+            {
+              "text": "significantly reduced need for training data",
+              "correct": false,
+              "explanation": "While Transformers can leverage large datasets effectively, they typically require more data than RNNs to achieve good performance."
+            },
+            {
+              "text": "supports significantly more compact models",
+              "correct": false,
+              "explanation": "Transformers often have a higher number of parameters than RNNs due to their attention mechanisms and feedforward layers."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Consider the example translation used to illustrate the Transformer architecture. Which of the following statements is false?",
+          "options": [
+            {
+              "text": "The final encoder representation of drink depends on the token embedding of Kaffee.",
+              "correct": true,
+              "explanation": "The Transformer encodes the English sentence and uses the representations computed in this process to generate the German sentence - not the other way around."
+            },
+            {
+              "text": "The final encoder representation of coffee depends on the token embedding of drink.",
+              "correct": false,
+              "explanation": "Self-attention ensures that each token's representation is influenced by other tokens in the sequence."
+            },
+            {
+              "text": "The final decoder representation of Kaffee depends on the final encoder representation of coffee.",
+              "correct": false,
+              "explanation": "In an encoder-decoder architecture, all representations computed in the encoder can influence the representations computed in the decoder through cross-attention."
+            }
+          ],
+          "images": ["images/transformer_translation.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "The Transformer architecture uses three different variants of multi-head attention. Which one is used in the encoder?",
+          "options": [
+            {
+              "text": "self-attention",
+              "correct": true,
+              "explanation": "The Transformer encoder uses self-attention to allow each token to attend to all other tokens in the input sequence."
+            },
+            {
+              "text": "masked self-attention",
+              "correct": false,
+              "explanation": "Masked self-attention is used in the decoder to prevent attending to future tokens during training."
+            },
+            {
+              "text": "cross-attention",
+              "correct": false,
+              "explanation": "Cross-attention is used in the decoder to attend to the encoder's output."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "What is the purpose of layer normalisation?",
+          "options": [
+            {
+              "text": "centering and scaling the layer's input values",
+              "correct": true,
+              "explanation": "Layer normalisation standardises the inputs to a layer by centering and scaling them to stabilise training."
+            },
+            {
+              "text": "squeezing the layer's input values into the interval [0, 1]",
+              "correct": false,
+              "explanation": "Layer normalisation does not necessarily map values into the [0, 1] range; it normalises them based on mean and variance."
+            },
+            {
+              "text": "down-scaling the layer's output values",
+              "correct": false,
+              "explanation": "The normalisation occurs on the inputs, not the outputs, and it involves both centering and scaling rather than just down-scaling."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "True or false: Permuting the input tokens to a Transformer encoder does not change the final token representations.",
+          "options": [
+            {
+              "text": "True",
+              "correct": false,
+              "explanation": "The Transformer architecture relies on positional encodings to capture word order, so permuting tokens changes their representations."
+            },
+            {
+              "text": "False",
+              "correct": true,
+              "explanation": "Transformers process input tokens in parallel, but they use positional encodings to maintain word order, meaning changing the order alters final representations."
+            },
+            {
+              "text": "Depends on the input tokens",
+              "correct": false,
+              "explanation": "While some word orders may yield similar representations, in general, changing the order affects the token representations due to positional encodings."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "2.5",
+      "questions": [
+        {
+          "number": 1,
+          "question": "What does the term generative pre-training refer to?",
+          "options": [
+            {
+              "text": "pre-training on a language modelling task",
+              "correct": true,
+              "explanation": "Generative pre-training refers to training a model on a language modelling task where it learns to predict the next token in a sequence before fine-tuning it on specific downstream tasks."
+            },
+            {
+              "text": "pre-training with a generative probabilistic model",
+              "correct": false,
+              "explanation": "While generative pre-training involves a generative model, it specifically refers to pre-training using autoregressive language modeling, not just any generative probabilistic approach."
+            },
+            {
+              "text": "pre-training on automatically generated text",
+              "correct": false,
+              "explanation": "Pre-training is typically done on large corpora of natural text rather than automatically generated text."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "Looking at the original GPT model architecture (Radford et al., 2018), what is the approximate number of trainable parameters in the FNN?",
+          "options": [
+            {
+              "text": "4,718,592",
+              "correct": true,
+              "explanation": "The feedforward neural network (FNN) layer in GPT-1 contains approximately 4,718,592 trainable parameters based on its architecture."
+            },
+            {
+              "text": "589,824",
+              "correct": false,
+              "explanation": ""
+            },
+            {
+              "text": "9,216",
+              "correct": false,
+              "explanation": ""
+            }
+          ],
+          "images": ["images/GPT-architecture.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "Suppose you want to fine-tune a GPT model on the Stanford Natural Language Inference dataset. What is the minimal number of parameters you need to update?",
+          "options": [
+            {
+              "text": "the number of parameters in the pre-trained GPT model",
+              "correct": false,
+              "explanation": "Full model fine-tuning updates all parameters, but minimal tuning requires updating only part of the model."
+            },
+            {
+              "text": "the number of parameters in the final Linear layer",
+              "correct": true,
+              "explanation": "The minimal number of parameters that need to be updated corresponds to the final Linear layer, which maps the model's hidden representations to the output task."
+            },
+            {
+              "text": "the sum of these two",
+              "correct": false,
+              "explanation": "While full fine-tuning updates both, the minimal required update involves only the final Linear layer."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "What do we mean when we say that GPT-3 exhibits zero-shot behaviour?",
+          "options": [
+            {
+              "text": "It can solve tasks without any task-specific fine-tuning.",
+              "correct": true,
+              "explanation": "Zero-shot learning means that GPT-3 can perform tasks it was not explicitly trained on, relying only on its general language understanding."
+            },
+            {
+              "text": "It can solve tasks without any training.",
+              "correct": false,
+              "explanation": "GPT-3 is extensively trained on a large corpus of text before demonstrating zero-shot capabilities."
+            },
+            {
+              "text": "It can solve tasks without receiving any input.",
+              "correct": false,
+              "explanation": "GPT-3 requires input prompts to generate responses, even in a zero-shot setting."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "What is a reasonable explanation for the observation that GPT-3 can translate from English to French?",
+          "options": [
+            {
+              "text": "The data sets used for pre-training contain example translations.",
+              "correct": true,
+              "explanation": "GPT-3 is trained on large-scale internet text, which includes many instances of translations, allowing it to learn translation patterns."
+            },
+            {
+              "text": "The number of model parameters approaches the number of neurons in the human brain.",
+              "correct": false,
+              "explanation": "While GPT-3 has more parameters than there are neurons in the human brain (175B vs. 86B), the model's translation ability is primarily due to the data it was trained on, not its parameter count."
+            },
+            {
+              "text": "The model has been trained based on feedback from professional translators.",
+              "correct": false,
+              "explanation": "GPT-3 is trained using unsupervised learning on large text corpora rather than direct feedback from translators."
+            }
+          ],
+          "images": [],
+          "references_previous_question": false
+        }
+      ]
+    },
+    {
+      "id": "2.6",
+      "questions": [
+        {
+          "number": 1,
+          "question": "What is the purpose of the segment encoding in BERT?",
+          "options": [
+            {
+              "text": "to distinguish between different segments of sentence pairs",
+              "correct": true,
+              "explanation": "In BERT, segment embeddings are used to differentiate between two input sentences in tasks like next sentence prediction."
+            },
+            {
+              "text": "to distinguish between different segments of words",
+              "correct": false,
+              "explanation": "Words in BERT are represented using WordPiece embeddings, not segment encodings."
+            },
+            {
+              "text": "to distinguish between different segments of the word embeddings",
+              "correct": false,
+              "explanation": "Segment encodings operate at the sentence level, not at the embedding level."
+            }
+          ],
+          "images": ["images/bert.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 2,
+          "question": "BERT is pre-trained on the masked language modelling task. Why is this task not suitable for pre-training GPT models?",
+          "options": [
+            {
+              "text": "GPT is based on the Transformer decoder, and as such can only \"look back\".",
+              "correct": true,
+              "explanation": "GPT is an autoregressive model that generates text sequentially, meaning it cannot use bidirectional context like masked language modeling in BERT."
+            },
+            {
+              "text": "Masked language modelling does not scale up to the number of parameters in GPT.",
+              "correct": false,
+              "explanation": "The scalability of masked language modelling is not the limiting factor; the autoregressive nature of GPT is."
+            },
+            {
+              "text": "GPT is trained on individual sentences, not sentence pairs (like BERT).",
+              "correct": false,
+              "explanation": "While GPT does not rely on sentence pairs, this is not the reason masked language modeling is unsuitable; rather, GPT's causal attention prevents it from utilising masked tokens."
+            }
+          ],
+          "images": ["images/bert.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 3,
+          "question": "What is the main purpose of the [CLS] token in BERT?",
+          "options": [
+            {
+              "text": "It is used as a representation of the complete input sentence pair.",
+              "correct": true,
+              "explanation": "The [CLS] token provides a fixed-length representation of the entire input and is commonly used for classification tasks."
+            },
+            {
+              "text": "It is used as a padding token.",
+              "correct": false,
+              "explanation": "Padding is handled separately and does not involve the [CLS] token."
+            },
+            {
+              "text": "It is used for the masked language modelling task.",
+              "correct": false,
+              "explanation": "Masked language modelling applies to other tokens, but the [CLS] token itself is not masked."
+            }
+          ],
+          "images": ["images/bert.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 4,
+          "question": "In masked language modelling, we generate training examples by randomly branching into one of three cases. Which of these would typically make the token representation at the selected position more dissimilar to the representations of the surrounding tokens?",
+          "options": [
+            {
+              "text": "replace the selected token with the [MASK] token",
+              "correct": false,
+              "explanation": "The [MASK] token still allows the model to infer meaning from surrounding tokens."
+            },
+            {
+              "text": "replace the selected token with a random word",
+              "correct": true,
+              "explanation": "Replacing a token with a random word disrupts contextual consistency, making the token representation more dissimilar to its surroundings."
+            },
+            {
+              "text": "not replace the selected token",
+              "correct": false,
+              "explanation": "Keeping the original token preserves its contextual relationship with surrounding words."
+            }
+          ],
+          "images": ["images/bert.png"],
+          "references_previous_question": false
+        },
+        {
+          "number": 5,
+          "question": "Which advantage does replaced token detection have over masked language modelling?",
+          "options": [
+            {
+              "text": "It learns from all input tokens.",
+              "correct": true,
+              "explanation": "Unlike masked language modelling, which modifies only a subset of tokens, replaced token detection operates on all tokens, improving data efficiency."
+            },
+            {
+              "text": "It only needs two classes.",
+              "correct": false,
+              "explanation": "The advantage of replaced token detection is not related to the number of classification categories."
+            },
+            {
+              "text": "It does not need the [MASK] token.",
+              "correct": false,
+              "explanation": "While replaced token detection avoids the need for a special masking token, its primary advantage is the ability to learn from all tokens."
+            }
+          ],
+          "images": ["images/bert.png"],
+          "references_previous_question": false
+        }
+      ]
+    }
+  ]
+}
