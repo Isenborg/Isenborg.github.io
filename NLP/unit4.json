@@ -125,29 +125,6 @@
       "id": "4.2",
       "questions": [
         {
-          "number": 1,
-          "question": "What core concern motivates this paper's investigation of language models and fact completion?",
-          "options": [
-            {
-              "text": "That correct answers alone may not prove that a model has truly memorised a fact",
-              "correct": true,
-              "explanation": "This is precisely the paper's motivation: a correct prediction could stem from heuristics, guesswork, or actual memorisation, and prior work conflates these."
-            },
-            {
-              "text": "That language models cannot generalise beyond their training data",
-              "correct": false,
-              "explanation": "The paper does not investigate generalisation failure; it investigates whether correct predictions reflect genuine fact memorisation."
-            },
-            {
-              "text": "That language models generate ungrammatical sentences when prompted with facts",
-              "correct": false,
-              "explanation": "Grammaticality is never discussed as a concern."
-            }
-          ],
-          "images": [],
-          "references_previous_question": false
-        },
-        {
           "number": 2,
           "question": "Which criterion distinguishes guesswork from exact fact recall in the PRISM taxonomy?",
           "options": [
@@ -165,29 +142,6 @@
               "text": "Whether the predicted token is of the correct semantic type",
               "correct": false,
               "explanation": "Both scenarios require a valid-type prediction (the \"fact completion\" criterion); that criterion alone does not separate them."
-            }
-          ],
-          "images": [],
-          "references_previous_question": false
-        },
-        {
-          "number": 3,
-          "question": "Why do the authors use synthetic subjects when testing for heuristic recall?",
-          "options": [
-            {
-              "text": "To ensure that predictions do not rely on real-world memorised facts",
-              "correct": true,
-              "explanation": "Synthetic subjects guarantee that the model cannot have memorised any fact about them. Confident predictions must therefore stem from heuristics, not memory."
-            },
-            {
-              "text": "To increase dataset size without manual annotation",
-              "correct": false,
-              "explanation": "Dataset size is not the motivation."
-            },
-            {
-              "text": "To make the prediction task harder for the language model",
-              "correct": false,
-              "explanation": "Task difficulty for the model is not the goal; controlling for memorisation is."
             }
           ],
           "images": [],

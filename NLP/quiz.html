@@ -219,7 +219,27 @@ body::before{
 .quiz-stats{display:flex;align-items:center;gap:16px}
 .stat{display:flex;align-items:center;gap:4px;font-weight:600}
 .stat.score{color:var(--primary)}
-.stat.streak{color:#ff9100}
+.stat.streak{color:#ff9100;transition:transform .3s ease,font-size .3s ease;position:relative;z-index:20}
+.sound-toggle{background:transparent;border:none;cursor:pointer;font-size:1.2rem;padding:4px;opacity:.7;transition:opacity .2s}
+.sound-toggle:hover{opacity:1}
+.sound-toggle.muted{opacity:.4}
+.streak-wrap{position:relative;display:inline-flex;align-items:center;gap:4px;z-index:20}
+.streak-wrap.has-streak .streak-display{text-shadow:0 0 12px rgba(255,109,0,.6),0 0 24px rgba(255,145,0,.4);filter:drop-shadow(0 2px 4px rgba(255,109,0,.3))}
+.streak-wrap.has-streak .streak-display:not([class*="streak-lvl"]){background:linear-gradient(135deg,rgba(255,109,0,.2),rgba(255,145,0,.1));padding:4px 8px;border-radius:16px;border:1px solid rgba(255,145,0,.35)}
+.streak-milestone{position:absolute;top:100%;left:50%;margin-top:8px;transform:translateX(-50%) translateY(0);background:linear-gradient(135deg,#ff9100,#ff6d00);color:#fff;font-size:.75rem;font-weight:700;padding:6px 12px;border-radius:20px;white-space:nowrap;animation:streakToast 1.4s ease forwards;box-shadow:0 4px 16px rgba(255,109,0,.4);pointer-events:none;z-index:10}
+@keyframes streakToast{0%{opacity:0;transform:translateX(-50%) translateY(-16px) scale(.7)}25%{opacity:1;transform:translateX(-50%) translateY(4px) scale(1.1)}45%,75%{opacity:1;transform:translateX(-50%) translateY(8px) scale(1)}100%{opacity:0;transform:translateX(-50%) translateY(24px) scale(1)}}
+@keyframes streakPulse1{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes streakPulse2{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+@keyframes streakPulse3{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+@keyframes streakPulse4{0%,100%{transform:scale(1)}50%{transform:scale(1.45)}}
+@keyframes streakPulse5{0%,100%{transform:scale(1)}50%{transform:scale(1.55)}}
+@keyframes streakPulse6{0%,100%{transform:scale(1)}50%{transform:scale(1.65)}}
+.streak-display.streak-lvl1{font-size:1.25em;animation:streakPulse1 .9s ease-in-out infinite;background:linear-gradient(135deg,rgba(255,109,0,.25),rgba(255,145,0,.15));padding:4px 10px;border-radius:20px;border:1px solid rgba(255,145,0,.4)}
+.streak-display.streak-lvl2{font-size:1.5em;animation:streakPulse2 .75s ease-in-out infinite;background:linear-gradient(135deg,rgba(255,109,0,.35),rgba(255,145,0,.2));padding:6px 12px;border-radius:24px;border:1px solid rgba(255,145,0,.5)}
+.streak-display.streak-lvl3{font-size:1.75em;animation:streakPulse3 .6s ease-in-out infinite;background:linear-gradient(135deg,rgba(255,109,0,.45),rgba(255,145,0,.25));padding:8px 14px;border-radius:28px;border:1px solid rgba(255,145,0,.6)}
+.streak-display.streak-lvl4{font-size:2em;animation:streakPulse4 .5s ease-in-out infinite;background:linear-gradient(135deg,rgba(255,109,0,.55),rgba(255,145,0,.3));padding:10px 16px;border-radius:32px;border:1px solid rgba(255,145,0,.7)}
+.streak-display.streak-lvl5{font-size:2.25em;animation:streakPulse5 .42s ease-in-out infinite;background:linear-gradient(135deg,rgba(255,109,0,.65),rgba(255,145,0,.35));padding:12px 18px;border-radius:36px;border:1px solid rgba(255,145,0,.8)}
+.streak-display.streak-lvl6{font-size:2.5em;animation:streakPulse6 .36s ease-in-out infinite;background:linear-gradient(135deg,rgba(255,109,0,.75),rgba(255,145,0,.4));padding:14px 20px;border-radius:40px;border:1px solid rgba(255,145,0,.9);box-shadow:0 0 20px rgba(255,109,0,.4)}
 .progress-bar{width:100%;height:10px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:24px;box-shadow:inset 0 1px 2px rgba(0,0,0,.06)}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-light));border-radius:8px;transition:width .4s ease}
 .q-label{color:var(--text-dim);font-size:.85rem;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
@@ -325,9 +345,10 @@ body::before{
     <div class="quiz-header">
       <button type="button" class="btn-home" id="quiz-home-btn" aria-label="Back to home">← Home</button>
       <span id="q-counter">Q 1/10</span>
+      <button type="button" class="sound-toggle" id="sound-toggle" aria-label="Toggle sound" title="Sound on/off">🔊</button>
       <div class="quiz-stats">
+        <span class="stat streak streak-wrap"><span class="streak-display" id="streak-display">🔥 0</span><span class="streak-milestone" id="streak-milestone" style="display:none"></span></span>
         <span class="stat score" id="score-display">⭐ 0</span>
-        <span class="stat streak" id="streak-display">🔥 0</span>
       </div>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
@@ -391,6 +412,53 @@ body::before{
 <div class="confetti-container" id="confetti-container"></div>
 
 <script>
+/* ══════════════════════════════════════
+   SOUNDS (Web Audio API)
+   ══════════════════════════════════════ */
+let soundEnabled = true;
+let audioCtx = null;
+
+function getAudioContext() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playTone(freq, duration, type = 'sine', volume = 0.15) {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = freq;
+    osc.type = type;
+    gain.gain.setValueAtTime(volume, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + duration);
+  } catch (_) {}
+}
+
+function playCorrect() {
+  playTone(523.25, 0.1, 'sine', 0.35);
+  setTimeout(() => playTone(659.25, 0.12, 'sine', 0.3), 35);
+  setTimeout(() => playTone(783.99, 0.15, 'sine', 0.25), 75);
+}
+
+function playWrong() {
+  playTone(200, 0.12, 'sawtooth', 0.25);
+  setTimeout(() => playTone(150, 0.15, 'sawtooth', 0.2), 45);
+}
+
+function playResultsFanfare() {
+  if (!soundEnabled) return;
+  const notes = [523.25, 587.33, 659.25, 783.99, 1046.5];
+  notes.forEach((freq, i) => {
+    setTimeout(() => playTone(freq, 0.2, 'sine', 0.35), i * 55);
+  });
+}
+
 /* ══════════════════════════════════════
    DATA & STATE
    ══════════════════════════════════════ */
@@ -715,6 +783,8 @@ function buildQuiz() {
 document.getElementById('start-btn').addEventListener('click', () => {
   quizQuestions = buildQuiz();
   if (quizQuestions.length === 0) return;
+  getAudioContext();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
   currentIdx = 0; score = 0; streak = 0; maxStreak = 0; answers = [];
   showScreen('quiz-screen');
   renderQuestion();
@@ -730,6 +800,51 @@ function showScreen(id) {
 }
 
 /* ══════════════════════════════════════
+   STREAK DISPLAY (dopamine mode)
+   ══════════════════════════════════════ */
+const STREAK_MESSAGES = {
+  5: '5 in a row! 🔥',
+  10: '10! Unstoppable! 🔥🔥',
+  15: '15! ON FIRE! 🔥🔥🔥',
+  20: '20! LEGENDARY! 💀',
+  25: '25! ABSOLUTE UNIT! 👑',
+  30: '30! GOD MODE! ⚡',
+  35: '35! MACHINE! 🤖',
+  40: '40! PERFECTION! ✨',
+  45: '45! TRANSCENDENT! 🌟',
+  50: '50! MAXIMUM DOPAMINE! 🎆'
+};
+function getStreakMessage(s) {
+  return STREAK_MESSAGES[s] || (s >= 55 ? `${s}! INSANE! 🚀` : null);
+}
+function updateStreakDisplay(showMilestone = false) {
+  const el = document.getElementById('streak-display');
+  const milestoneEl = document.getElementById('streak-milestone');
+  const wrap = el?.closest('.streak-wrap');
+  if (!el) return;
+  el.textContent = `🔥 ${streak}`;
+  el.className = 'streak-display';
+  wrap?.classList.toggle('has-streak', streak >= 1);
+  if (streak >= 5) {
+    const lvl = Math.min(6, Math.floor(streak / 5));
+    el.classList.add(`streak-lvl${lvl}`);
+  }
+  if (showMilestone && streak >= 5 && streak % 5 === 0) {
+    const msg = getStreakMessage(streak);
+    if (msg) {
+      milestoneEl.textContent = msg;
+      milestoneEl.style.display = '';
+      milestoneEl.style.animation = 'none';
+      milestoneEl.offsetHeight;
+      milestoneEl.style.animation = '';
+      setTimeout(() => { milestoneEl.style.display = 'none'; }, 1400);
+    }
+  } else {
+    milestoneEl.style.display = 'none';
+  }
+}
+
+/* ══════════════════════════════════════
    RENDER QUESTION
    ══════════════════════════════════════ */
 function renderQuestion() {
@@ -738,7 +853,7 @@ function renderQuestion() {
 
   document.getElementById('q-counter').textContent = `Q ${currentIdx + 1}/${total}`;
   document.getElementById('score-display').textContent = `⭐ ${score}`;
-  document.getElementById('streak-display').textContent = `🔥 ${streak}`;
+  updateStreakDisplay(false);
   document.getElementById('progress-fill').style.width = `${((currentIdx) / total) * 100}%`;
 
   document.getElementById('q-source').textContent = `${q._unit} · Lecture ${q._lectureId}`;
@@ -793,6 +908,7 @@ function handleAnswer(selectedIdx, clickedBtn) {
   });
 
   if (correct) {
+    playCorrect();
     clickedBtn.classList.add('correct');
     clickedBtn.classList.add('pulse');
     streak++;
@@ -801,13 +917,14 @@ function handleAnswer(selectedIdx, clickedBtn) {
     const pts = 100 + (streak - 1) * 25;
     score += pts;
   } else {
+    playWrong();
     clickedBtn.classList.add('wrong');
     clickedBtn.classList.add('shake');
     streak = 0;
   }
 
   document.getElementById('score-display').textContent = `⭐ ${score}`;
-  document.getElementById('streak-display').textContent = `🔥 ${streak}`;
+  updateStreakDisplay(correct);
 
   // Show explanation
   const expArea = document.getElementById('explanation-area');
@@ -919,8 +1036,11 @@ function showResults() {
     reviewList.appendChild(item);
   });
 
-  // Confetti for good scores
-  if (pct >= 60) launchConfetti();
+  // Confetti and fanfare for good scores
+  if (pct >= 60) {
+    launchConfetti();
+    playResultsFanfare();
+  }
 }
 
 /* ══════════════════════════════════════
@@ -1003,6 +1123,14 @@ document.getElementById('home-btn').addEventListener('click', () => {
 
 document.getElementById('quiz-home-btn').addEventListener('click', () => {
   showScreen('start-screen');
+});
+
+document.getElementById('sound-toggle').addEventListener('click', () => {
+  soundEnabled = !soundEnabled;
+  const btn = document.getElementById('sound-toggle');
+  btn.textContent = soundEnabled ? '🔊' : '🔇';
+  btn.classList.toggle('muted', !soundEnabled);
+  btn.title = soundEnabled ? 'Sound on' : 'Sound off';
 });
 
 /* ══════════════════════════════════════
