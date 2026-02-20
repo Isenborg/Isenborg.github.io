@@ -3,18 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎯 Quiz Practice</title>
+<title>NLP Practice</title>
 <style>
 :root {
   --primary: #7c4dff; --primary-dark: #651fff; --primary-light: #b388ff;
   --success: #00e676; --success-dark: #00c853; --error: #ff5252; --error-dark: #d50000;
-  --bg: #f0f2f5; --bg-card: #ffffff; --bg-card-alt: #f8f9ff;
-  --text: #1a1d2e; --text-dim: #5c6370; --border: #e1e4e8;
-  --radius: 12px; --shadow: 0 4px 20px rgba(0,0,0,.08);
+  --bg: #f5f3ff; --bg-card: #ffffff; --bg-card-alt: #faf8ff;
+  --text: #1a1d2e; --text-dim: #5c6370; --border: #e8e4f0;
+  --radius: 16px; --radius-sm: 12px; --shadow: 0 4px 24px rgba(124,77,255,.06);
+  --shadow-lg: 0 12px 40px rgba(124,77,255,.1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:20px}
-#app{width:100%;max-width:720px;margin:0 auto}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:linear-gradient(165deg, #f8f6ff 0%, #f0ecff 40%, #ebe5ff 100%);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:24px;
+  position:relative;
+}
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:radial-gradient(circle at 20% 20%, rgba(124,77,255,.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(179,136,255,.03) 0%, transparent 50%);
+  pointer-events:none;z-index:0;
+}
+#app{width:100%;max-width:720px;margin:0 auto;position:relative;z-index:1}
 .screen{display:none;animation:fadeUp .4s ease}
 .screen.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -25,44 +43,180 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .pulse{animation:pulse .3s ease}
 
 /* ── Start Screen ── */
-.hero{text-align:center;margin-bottom:32px}
-.hero h1{font-size:2.4rem;background:linear-gradient(135deg,var(--primary-light),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-.hero p{color:var(--text-dim);font-size:1.05rem}
-.card{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
-.card h2{font-size:1.15rem;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.unit-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.unit-check{display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 12px;border-radius:var(--radius);cursor:pointer;transition:all .25s ease;border:2px solid var(--border);background:var(--bg-card);position:relative}
-.unit-check:hover{background:var(--bg-card-alt);border-color:var(--primary);transform:translateY(-2px);box-shadow:var(--shadow)}
-.unit-check:hover .unit-check-check{opacity:.5}
+.hero{
+  text-align:center;
+  margin-bottom:40px;
+  padding:32px 24px 40px;
+}
+.hero h1{
+  font-size:2.8rem;
+  font-weight:800;
+  letter-spacing:-0.03em;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 50%,#9c6bff 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:12px;
+  text-shadow:0 0 60px rgba(124,77,255,.15);
+}
+.hero p{
+  color:var(--text-dim);
+  font-size:1.1rem;
+  max-width:360px;
+  margin:0 auto;
+  line-height:1.6;
+}
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px;
+  margin-bottom:24px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(8px);
+}
+.card h2{
+  font-size:1.2rem;
+  font-weight:700;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--text);
+}
+.unit-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.unit-check{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  padding:20px 14px;
+  border-radius:var(--radius-sm);
+  cursor:pointer;
+  transition:all .3s ease;
+  border:2px solid var(--border);
+  background:var(--bg-card);
+  position:relative;
+}
+.unit-check:hover{
+  background:var(--bg-card-alt);
+  border-color:rgba(124,77,255,.4);
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-lg);
+}
+.unit-check:hover .unit-check-check{opacity:.6}
 .unit-check input{position:absolute;opacity:0;pointer-events:none}
-.unit-check-check{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s}
-.unit-check.checked{background:linear-gradient(135deg,rgba(124,77,255,.12),rgba(124,77,255,.06));border-color:var(--primary);box-shadow:0 0 0 1px rgba(124,77,255,.2)}
-.unit-check.checked .unit-check-check{background:var(--primary);border-color:var(--primary);color:#fff;opacity:1}
-.unit-check .name{font-weight:600;font-size:.95rem;text-align:center}
-.unit-check .count{color:var(--text-dim);font-size:.75rem;text-align:center}
-.count-control{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.count-control .count-btns{display:flex;align-items:center;gap:4px}
-.count-control .count-btns button{width:40px;height:40px;border-radius:10px;border:2px solid var(--border);background:var(--bg-card);color:var(--text);font-size:1.2rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
-.count-control .count-btns button:hover{background:var(--bg-card-alt);border-color:var(--primary);color:var(--primary);transform:scale(1.05)}
-.count-control .count-btns button:active{transform:scale(.95)}
-.count-control input[type=number]{width:56px;background:var(--bg);border:2px solid var(--border);color:var(--text);padding:8px;border-radius:10px;font-size:1.1rem;font-weight:600;text-align:center}
-.count-control input[type=number]:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(124,77,255,.15)}
-.count-control input[type=range]{flex:1;min-width:100px;accent-color:var(--primary)}
-.count-presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.count-preset{padding:8px 16px;border-radius:12px;border:2px solid var(--border);background:var(--bg-card);color:var(--text-dim);font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
-.count-preset:hover{background:var(--bg-card-alt);border-color:var(--primary);color:var(--primary)}
-.count-preset.active{background:var(--primary);border-color:var(--primary);color:#fff}
-.avail{color:var(--text-dim);font-size:.85rem;margin-top:8px}
-.btn{padding:14px 32px;border:none;border-radius:var(--radius);font-size:1.05rem;font-weight:600;cursor:pointer;transition:.25s;display:inline-flex;align-items:center;gap:8px}
-.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;width:100%}
-.btn-primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 24px rgba(124,77,255,.4)}
+.unit-check-check{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  border:2px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.85rem;
+  transition:all .25s;
+}
+.unit-check.checked{
+  background:linear-gradient(145deg,rgba(124,77,255,.1),rgba(124,77,255,.04));
+  border-color:var(--primary);
+  box-shadow:0 0 0 1px rgba(124,77,255,.15), var(--shadow);
+}
+.unit-check.checked .unit-check-check{
+  background:var(--primary);
+  border-color:var(--primary);
+  color:#fff;
+  opacity:1;
+}
+.unit-check .name{font-weight:700;font-size:1rem;text-align:center;color:var(--text)}
+.unit-check .count{color:var(--text-dim);font-size:.8rem;text-align:center}
+.count-presets{display:flex;flex-wrap:wrap;gap:10px}
+.count-preset{
+  padding:10px 18px;
+  border-radius:12px;
+  border:2px solid var(--border);
+  background:var(--bg-card);
+  color:var(--text-dim);
+  font-size:.95rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .25s;
+}
+.count-preset:hover{
+  background:var(--bg-card-alt);
+  border-color:var(--primary);
+  color:var(--primary);
+}
+.count-preset.active{
+  background:var(--primary);
+  border-color:var(--primary);
+  color:#fff;
+}
+.avail{color:var(--text-dim);font-size:.9rem;margin-top:12px}
+.btn{
+  padding:16px 36px;
+  border:none;
+  border-radius:var(--radius);
+  font-size:1.08rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:.3s;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff;
+  width:100%;
+  box-shadow:0 4px 16px rgba(124,77,255,.25);
+}
+.btn-primary:hover:not(:disabled){
+  transform:translateY(-3px);
+  box-shadow:0 8px 28px rgba(124,77,255,.4);
+}
 .btn-primary:disabled{opacity:.4;cursor:not-allowed}
 .btn-secondary{background:var(--bg-card-alt);color:var(--text);border:2px solid var(--border)}
 .btn-secondary:hover{border-color:var(--primary);background:rgba(124,77,255,.08);transform:translateY(-2px)}
-.btn-sm{padding:8px 16px;font-size:.9rem;border-radius:8px}
+.btn-sm{padding:10px 18px;font-size:.9rem;border-radius:10px}
+.btn-home{
+  padding:8px 14px;
+  font-size:.85rem;
+  border-radius:10px;
+  background:rgba(124,77,255,.1);
+  color:var(--primary);
+  border:1px solid rgba(124,77,255,.25);
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  cursor:pointer;
+  transition:all .2s;
+  text-decoration:none;
+}
+.btn-home:hover{
+  background:rgba(124,77,255,.18);
+  border-color:var(--primary);
+  transform:translateY(-1px);
+}
+.start-btn-wrap{margin-top:8px}
 
 /* ── Quiz Screen ── */
-.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:.9rem;color:var(--text-dim)}
+.quiz-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+  font-size:.9rem;
+  color:var(--text-dim);
+  gap:12px;
+  flex-wrap:wrap;
+}
+.quiz-header .btn-home{flex-shrink:0}
+.quiz-stats{display:flex;align-items:center;gap:16px}
 .stat{display:flex;align-items:center;gap:4px;font-weight:600}
 .stat.score{color:var(--primary)}
 .stat.streak{color:#ff9100}
@@ -128,11 +282,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .confetti{position:absolute;width:10px;height:10px;top:-20px;animation:confettiFall linear forwards}
 
 @media(max-width:600px){
-  body{padding:10px}
-  .hero h1{font-size:1.8rem}
+  body{padding:16px}
+  .hero{padding:24px 16px 32px}
+  .hero h1{font-size:2rem}
+  .hero p{font-size:1rem}
   .q-text{font-size:1.05rem}
   .stats-grid{grid-template-columns:1fr}
-  .btn{padding:12px 20px;font-size:.95rem}
+  .btn{padding:14px 24px;font-size:1rem}
+  .unit-checks{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -142,8 +299,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
   <!-- ════ START SCREEN ════ -->
   <div id="start-screen" class="screen active">
     <div class="hero">
-      <h1>🎯 Quiz Practice</h1>
-      <p>Pick your units and start practicing!</p>
+      <h1>NLP Practice</h1>
+      <p>Choose your units, set the number of questions, and test your knowledge.</p>
     </div>
 
     <div class="card" id="units-card" style="display:none">
@@ -153,19 +310,12 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 
     <div class="card" id="count-card" style="display:none">
       <h2>🔢 Number of Questions</h2>
-      <div class="count-control">
-        <div class="count-btns">
-          <button type="button" id="q-minus" aria-label="Decrease">−</button>
-          <input type="number" id="q-num" min="1" max="10" value="10">
-          <button type="button" id="q-plus" aria-label="Increase">+</button>
-        </div>
-        <input type="range" id="q-range" min="1" max="10" value="10">
-      </div>
+      <input type="hidden" id="q-num" value="10">
       <div class="count-presets" id="count-presets"></div>
       <div class="avail" id="avail-text">0 questions available</div>
     </div>
 
-    <div id="start-btn-wrap" style="display:none">
+    <div id="start-btn-wrap" style="display:none" class="start-btn-wrap">
       <button class="btn btn-primary" id="start-btn" disabled>🚀 Start Quiz</button>
     </div>
   </div>
@@ -173,9 +323,12 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
   <!-- ════ QUIZ SCREEN ════ -->
   <div id="quiz-screen" class="screen">
     <div class="quiz-header">
+      <button type="button" class="btn-home" id="quiz-home-btn" aria-label="Back to home">← Home</button>
       <span id="q-counter">Q 1/10</span>
-      <span class="stat score" id="score-display">⭐ 0</span>
-      <span class="stat streak" id="streak-display">🔥 0</span>
+      <div class="quiz-stats">
+        <span class="stat score" id="score-display">⭐ 0</span>
+        <span class="stat streak" id="streak-display">🔥 0</span>
+      </div>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
 
@@ -205,7 +358,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
       </div>
 
       <div class="stats-grid">
-        <div class="stat-card"><div class="val" id="r-score">0</div><div class="lbl">Points</div></div>
+        <div class="stat-card"><div class="val" id="r-score">0%</div><div class="lbl">Score</div></div>
         <div class="stat-card"><div class="val" id="r-correct">0/0</div><div class="lbl">Correct</div></div>
         <div class="stat-card"><div class="val" id="r-streak">0</div><div class="lbl">Best Streak 🔥</div></div>
       </div>
@@ -250,6 +403,15 @@ let maxStreak = 0;
 let answers = [];    // [{question, selectedIdx, correct}]
 let modalImages = [];
 let modalIdx = 0;
+
+function shuffleArr(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 /* ══════════════════════════════════════
    LOAD UNITS
@@ -309,20 +471,18 @@ function buildStartUI() {
 
 function buildCountPresets() {
   const container = document.getElementById('count-presets');
-  const range = document.getElementById('q-range');
   const num = document.getElementById('q-num');
   container.innerHTML = '';
-  [5, 10, 15, 20, 'All'].forEach(n => {
+  [5, 10, 20, 40, 'All'].forEach(n => {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'count-preset';
     btn.textContent = n === 'All' ? 'All' : n.toString();
     btn.dataset.val = n === 'All' ? '' : n.toString();
     btn.addEventListener('click', () => {
-      const max = parseInt(range.max) || 1;
+      const max = getSelectedQuestions().length;
       const v = n === 'All' ? max : Math.min(n, max);
       num.value = v;
-      range.value = v;
       container.querySelectorAll('.count-preset').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       updateAvailable();
@@ -356,53 +516,30 @@ function getSelectedQuestions() {
 function updateAvailable() {
   const pool = getSelectedQuestions();
   const max = pool.length;
-  const range = document.getElementById('q-range');
   const num = document.getElementById('q-num');
   const avail = document.getElementById('avail-text');
   const startBtn = document.getElementById('start-btn');
 
-  range.max = max; num.max = max;
-  if (parseInt(range.value) > max) { range.value = max; num.value = max; }
-  if (max === 0) { range.value = 0; num.value = 0; }
-  else if (parseInt(range.value) < 1) { range.value = Math.min(10, max); num.value = Math.min(10, max); }
+  let val = parseInt(num.value) || 0;
+  if (val > max) val = max;
+  else if (max > 0 && val < 1) val = Math.min(10, max);
+  num.value = val;
 
   avail.textContent = `${max} question${max !== 1 ? 's' : ''} available`;
   startBtn.disabled = max === 0;
 
-  // Sync preset active state
-  const val = parseInt(num.value) || 0;
-  const rangeMax = parseInt(range.max) || 0;
   document.querySelectorAll('.count-preset').forEach(b => {
     const isAll = b.textContent === 'All';
-    b.classList.toggle('active', isAll ? val === rangeMax && rangeMax > 0 : parseInt(b.textContent) === val);
+    b.classList.toggle('active', isAll ? val === max && max > 0 : parseInt(b.textContent) === val);
   });
 }
-
-const qRange = document.getElementById('q-range');
-const qNum = document.getElementById('q-num');
-qRange.addEventListener('input', () => { qNum.value = qRange.value; updateAvailable(); });
-qNum.addEventListener('input', () => {
-  let v = parseInt(qNum.value) || 0;
-  v = Math.max(1, Math.min(v, parseInt(qRange.max)));
-  qNum.value = v; qRange.value = v;
-  updateAvailable();
-});
-document.getElementById('q-minus').addEventListener('click', () => {
-  let v = parseInt(qNum.value) || 1;
-  if (v > 1) { v--; qNum.value = v; qRange.value = v; updateAvailable(); }
-});
-document.getElementById('q-plus').addEventListener('click', () => {
-  let v = parseInt(qNum.value) || 1;
-  const max = parseInt(qRange.max) || 1;
-  if (v < max) { v++; qNum.value = v; qRange.value = v; updateAvailable(); }
-});
 
 /* ══════════════════════════════════════
    QUIZ GENERATION — with dependency handling
    ══════════════════════════════════════ */
 function buildQuiz() {
   const pool = getSelectedQuestions();
-  const count = parseInt(qNum.value) || 1;
+  const count = parseInt(document.getElementById('q-num').value) || 1;
 
   // Separate independent and dependent questions
   const independent = pool.filter(q => !q.references_previous_question);
@@ -424,19 +561,9 @@ function buildQuiz() {
     return `${q._unit}|${q._lectureId}|${q.number}`;
   }
 
-  // Shuffle helper
-  function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
   // Start by picking from shuffled independent questions
-  let shuffledInd = shuffle(independent);
-  let shuffledDep = shuffle(dependent);
+  let shuffledInd = shuffleArr(independent);
+  let shuffledDep = shuffleArr(dependent);
 
   // We'll build the quiz step by step
   let attempts = 0;
@@ -629,11 +756,12 @@ function renderQuestion() {
     imgArea.appendChild(btn);
   }
 
-  // Options
+  // Options — shuffle so correct answer isn't always in the same position
   const optArea = document.getElementById('options-area');
   optArea.innerHTML = '';
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  q.options.forEach((opt, i) => {
+  q._displayOptions = shuffleArr(q.options);
+  q._displayOptions.forEach((opt, i) => {
     const btn = document.createElement('button');
     btn.className = 'option';
     btn.innerHTML = `<span class="marker">${letters[i]}</span><span>${opt.text}</span>`;
@@ -651,9 +779,10 @@ function renderQuestion() {
    ══════════════════════════════════════ */
 function handleAnswer(selectedIdx, clickedBtn) {
   const q = quizQuestions[currentIdx];
-  const correct = q.options[selectedIdx].correct;
-  const explanation = q.options[selectedIdx].explanation;
-  const correctIdx = q.options.findIndex(o => o.correct);
+  const opts = q._displayOptions || q.options;  // use shuffled order if available
+  const correct = opts[selectedIdx].correct;
+  const explanation = opts[selectedIdx].explanation;
+  const correctIdx = opts.findIndex(o => o.correct);
 
   // Disable all options
   const allBtns = document.querySelectorAll('#options-area .option');
@@ -682,7 +811,7 @@ function handleAnswer(selectedIdx, clickedBtn) {
 
   // Show explanation
   const expArea = document.getElementById('explanation-area');
-  const correctOption = q.options[correctIdx];
+  const correctOption = opts[correctIdx];
   expArea.innerHTML = `
     <div class="explanation-box ${correct ? 'correct' : 'wrong'}">
       <div class="exp-header">${correct ? '✅ Correct!' : '❌ Incorrect'}</div>
@@ -699,7 +828,7 @@ function handleAnswer(selectedIdx, clickedBtn) {
     explanation,
     correctExplanation: correctOption.explanation,
     correctText: correctOption.text,
-    selectedText: q.options[selectedIdx].text,
+    selectedText: opts[selectedIdx].text,
     _unit: q._unit,
     _lectureId: q._lectureId
   });
@@ -755,17 +884,17 @@ function showResults() {
 
   // Message
   const msgs = {
-    100: "Perfect score! You're a genius! 🎉",
-    75: "Great job! Almost there! 🚀",
-    50: "Good effort! Keep practicing! 📚",
-    25: "Don't give up! Review and try again! 💡",
-    0: "Rough start, but every expert was once a beginner! 🌱"
+    100: "Ajajaj, Marco skulle vara nöjd!",
+    75: "This must have been Antti... Do better",
+    50: "Åh nej denjo, du måste använda GPT!",
+    25: "Ge upp på livet...",
+    0: "Houvilla type shit!!!!"
   };
   const msgKey = pct >= 100 ? 100 : pct >= 75 ? 75 : pct >= 50 ? 50 : pct >= 25 ? 25 : 0;
   document.getElementById('result-msg').textContent = msgs[msgKey];
 
   // Stats
-  document.getElementById('r-score').textContent = score;
+  document.getElementById('r-score').textContent = pct + '%';
   document.getElementById('r-correct').textContent = `${correctCount}/${total}`;
   document.getElementById('r-streak').textContent = maxStreak;
 
@@ -872,16 +1001,32 @@ document.getElementById('home-btn').addEventListener('click', () => {
   showScreen('start-screen');
 });
 
+document.getElementById('quiz-home-btn').addEventListener('click', () => {
+  showScreen('start-screen');
+});
+
 /* ══════════════════════════════════════
    KEYBOARD SHORTCUTS (optional)
    ══════════════════════════════════════ */
 document.addEventListener('keydown', e => {
   if (document.getElementById('quiz-screen').classList.contains('active')) {
+    const opts = document.querySelectorAll('#options-area .option:not(.disabled)');
     // Number keys 1-9 to select option
     const num = parseInt(e.key);
-    if (num >= 1 && num <= 9) {
-      const opts = document.querySelectorAll('#options-area .option:not(.disabled)');
-      if (opts[num - 1]) opts[num - 1].click();
+    if (num >= 1 && num <= 9 && opts[num - 1]) {
+      e.preventDefault();
+      opts[num - 1].click();
+      return;
+    }
+    // Letter keys A–Z (or a–z) to select option
+    const letter = e.key.toUpperCase();
+    if (letter >= 'A' && letter <= 'Z') {
+      const idx = letter.charCodeAt(0) - 65;  // A=0, B=1, C=2, ...
+      if (opts[idx]) {
+        e.preventDefault();
+        opts[idx].click();
+        return;
+      }
     }
     // Enter or Space to go next
     if ((e.key === 'Enter' || e.key === ' ') && document.getElementById('next-btn-wrap').style.display !== 'none') {
